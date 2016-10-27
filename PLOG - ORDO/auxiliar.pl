@@ -1,9 +1,8 @@
 
 % Return element by index (Row,col)
-index(Matrix, Row, Col, Value):-
+getElement(Matrix, Row, Col, Value):-
   nth1(Row, Matrix, MatrixRow),
   nth1(Col, MatrixRow, Value).
-
 
 % Change content of the board
 changeTo(_,[],[],_,_).
@@ -44,10 +43,19 @@ contaLista(Valor, [H|T], L2, NrVezes):-
   (Valor == H -> (contaLista(Valor, T, L2, Y), NrVezes is Y + 1); contaLista(Valor, T, L2, NrVezes)).
 contaLista(Valor,[], L2, NrVezes) :- contaListaDeLista(Valor, L2, NrVezes).
 
-test2 :-
-  board(L1),
-  contaListaDeLista(x,L1,NrVezes), write(NrVezes), nl,
-  test(i).
+% Convert letter to an index
+letterToNumber(Letra,Numero):-
+  (Letra == 'a' -> Numero is 1;
+  Letra == 'b' -> Numero is 2;
+  Letra == 'c' -> Numero is 3;
+  Letra == 'd' -> Numero is 4;
+  Letra == 'e' -> Numero is 5;
+  Letra == 'f' -> Numero is 6;
+  Letra == 'g' -> Numero is 7;
+  Letra == 'h' -> Numero is 8;
+  Letra == 'i' -> Numero is 9;
+  Letra == 'l' -> Numero is 10).
+
 
 % Display First Line in a 'dynamic' way
 display_primeira(Inicio, Fim):-
@@ -55,14 +63,14 @@ display_primeira(Inicio, Fim):-
 display_primeira(_, _).
 
 
-% Verifica se Input � entre A-J
+% Verifica se Input esta entre A-J
 letra(X,_) :- X = 'a'; X = 'b'; X = 'c'; X = 'd'; X = 'e';
 X = 'f';  X = 'g';  X = 'h'; X = 'i';  X = 'j'.
 
 letra(_,Y) :- nl,
 write('Valor invalido!'), nl, nl, askPlay(Y).
 
-% Verifica se Input � entre 1-8
+% Verifica se Input esta entre 1-8
 numero(X,_) :- integer(X), X >= 1,  X =< 8.
 
 numero(_,Y) :- nl,
@@ -74,14 +82,14 @@ write('Valor invalido!'), nl, nl, askPlay(Y).
 par(N):- N mod 2 =:= 0.
 impar(N):- N mod 2 =:= 1.
 
-getNewLine :- 
+getNewLine :-
         get_code(T) , (T == 10 -> ! ; getNewLine).
 
-getDigit(D) :- 
+getDigit(D) :-
         get_code(Dt) , D is Dt - 48 , (Dt == 10 -> ! ; getNewLine).
-		
-getChar(C) :- 
+
+getChar(C) :-
         get_char(C) , char_code(C, Co) , (Co == 10 -> ! ; getNewLine).
-		
+
 % Limpa o terminal
 cls :- write('\e[2J').
