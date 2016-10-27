@@ -74,16 +74,16 @@ gameArea(X,L1) :- nl,
 askPlay(ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino) :-
 	write('Digite a coluna (letra) da peca a mover'), nl,
 	getChar(ColunaToMove),
-	letra(ColunaToMove,1),
+	letra(ColunaToMove),
 	write('Digite a linha (numero) da peca a mover'), nl,
 	getDigit(LinhaToMove),
-	numero(LinhaToMove,2),
+	numero(LinhaToMove),
  	write('Digite a coluna (letra) do destino'), nl,
 	getChar(ColunaDestino),
-	letra(ColunaDestino,3),
+	letra(ColunaDestino),
  	write('Digite a linha (numero) do destino'), nl,
 	getDigit(LinhaDestino),
-	numero(LinhaDestino,4).
+	numero(LinhaDestino).
 
 jogar(L1) :- cls, nl,
 	write('Jogador vs Jogador'), nl,

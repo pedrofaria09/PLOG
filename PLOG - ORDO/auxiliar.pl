@@ -64,17 +64,15 @@ display_primeira(_, _).
 
 
 % Verifica se Input esta entre A-J
-letra(X,_) :- X = 'a'; X = 'b'; X = 'c'; X = 'd'; X = 'e';
+letra(X) :- X = 'a'; X = 'b'; X = 'c'; X = 'd'; X = 'e';
 X = 'f';  X = 'g';  X = 'h'; X = 'i';  X = 'j'.
-
-letra(_,Y) :- nl,
-write('Valor invalido!'), nl, nl, askPlay(Y).
+letra(_) :- nl,
+write('Valor invalido!'), nl, nl, askPlay(_,_,_,_).
 
 % Verifica se Input esta entre 1-8
-numero(X,_) :- integer(X), X >= 1,  X =< 8.
-
-numero(_,Y) :- nl,
-write('Valor invalido!'), nl, nl, askPlay(Y).
+numero(X) :- integer(X), X >= 1,  X =< 8.
+numero(_) :- nl,
+write('Valor invalido!'), nl, nl, askPlay(_,_,_,_).
 
 
 
