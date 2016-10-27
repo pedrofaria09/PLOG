@@ -4,23 +4,66 @@
 
 
 
-main :-
+menu :-
 	cls,
-	write(' ---------------------------- '), nl,
-	write('|                            |'), nl,
-	write('|            O D             |'), nl,
-	write('|             R O            |'), nl,
-	write('|                            |'), nl,
-	write('|----------------------------|'), nl,
-	write('|         1 - Jogar          |'), nl,
-	write('|                            |'), nl,
-	write(' ---------------------------- '), nl,
-	write('Escrever o numero da escolha seguida de um ponto'), nl,
+	write('   --------------------------------------- '), nl,
+	write('  |                                       |'), nl,
+	write('  |                                       |'), nl,
+	write('  |                  O D                  |'), nl,
+	write('  |                   R O                 |'), nl,
+	write('  |                                       |'), nl,
+	write('  |                                       |'), nl,
+	write('  |---------------------------------------|'), nl,
+	write('  |                                       |'), nl,
+	write('  |             1 - Jogar                 |'), nl,
+	write('  |             2 - Modo                  |'), nl,
+	write('  |             3 - Sair                  |'), nl,
+	write('  |                                       |'), nl,
+	write('   --------------------------------------- '), nl,
+	nl, nl,
+	menu_option.
+	
+menu_mode :-
+	cls,
+	write('   --------------------------------------- '), nl,
+	write('  |                                       |'), nl,
+	write('  |                                       |'), nl,
+	write('  |                  O D                  |'), nl,
+	write('  |                   R O                 |'), nl,
+	write('  |                                       |'), nl,
+	write('  |                                       |'), nl,
+	write('  |---------------------------------------|'), nl,
+	write('  |                                       |'), nl,
+	write('  |       1 - Jogador vs Jogador          |'), nl,
+	write('  |       2 - Jogador vs Computador       |'), nl,
+	write('  |       3 - Computador vs Computador    |'), nl,
+	write('  |                                       |'), nl,
+	write('   --------------------------------------- '), nl,
+	nl, nl,
+	mode.
+	
+menu_option :- write('Escrever o numero da escolha seguida de um ponto'), nl,
 	read(Input),
 	!,
 	menu_options(Input).
+	
+mode :- write('Escrever o numero da escolha seguida de um ponto'), nl,
+	read(Input),
+	!,
+	mode_options(Input).
 
 menu_options(1) :-	jogar.
+menu_options(2) :-	menu_mode.
+menu_options(3) :- break,!.
+menu_options(Other) :- nl,
+	write('Introduza numero valido'),
+	nl,
+	menu_option.
+
+mode_options(1) :- jogar.
+mode_options(2) :- jogar(1).
+mode_options(3) :- jogar(2).
+
 
 gameArea(X) :- nl,
 	board(L1),
@@ -52,19 +95,29 @@ askPlay(4) :- write('Digite a linha (numero) do destino'), nl,
 	numero(LinhaDestino,4).
 
 jogar :- cls,
-	jogar(1).
+	write('Jogador vs Jogador'), nl,
+	jogada(1).
 
-jogar(X) :- par(X), cls,
+jogar(1) :- cls,
+	write('Jogador vs Computador'), nl,
+	jogada(1).
+	
+jogar(2) :- cls,
+	write('Computador vs Computador'), nl,
+	jogada(1).
+
+jogada(X) :- par(X), cls
+,
 	gameArea(X),
 	write('->Jogam as pretas - (X)'), nl,
 	askPlay,
-	jogar(X+1).
+	jogada(X+1).
 
-jogar(X) :- impar(X), cls,
+jogada(X) :- impar(X), cls,
 	gameArea(X),
 	write('-> Jogam as brancas - (O)'), nl,
 	askPlay,
-	jogar(X+1).
+	jogada(X+1).
 
 
 dados_jogo(Jogada, Numero_brancas, Numero_pretas) :-
