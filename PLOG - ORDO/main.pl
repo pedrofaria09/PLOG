@@ -1,6 +1,6 @@
 :-consult(auxiliar).
 :-consult(display).
-:- use_module(library(lists)).
+:-use_module(library(lists)).
 
 
 
@@ -23,7 +23,10 @@ main :-
 menu_options(1) :-	jogar.
 
 gameArea(X) :- nl,
-	dados_jogo(X, 20, 20), nl,
+	board(L1),
+	contaListaDeLista(o,L1,NrBrancas),
+	contaListaDeLista(x,L1,NrPretas),
+	dados_jogo(X, NrBrancas, NrPretas), nl,
 	display_primeira("A","J"), nl,
 	test(i).
 
@@ -63,12 +66,6 @@ jogar(X) :- impar(X), cls,
 	askPlay,
 	jogar(X+1).
 
-
-
-%	display_firstline([[a,b,c,d,e,f,g,h,i,j]]), nl,
-%	test(m),
-%	display_firstline([[a,b,c,d,e,f,g,h,i,j]]), nl,
-%	test(f).
 
 dados_jogo(Jogada, Numero_brancas, Numero_pretas) :-
 	format('Jogada numero: ~d', [Jogada]), nl,

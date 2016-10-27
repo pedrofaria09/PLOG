@@ -37,21 +37,22 @@ conta1Lista(Valor, [H|T], NrVezes) :-
 conta1Lista(_,[],NrVezes) :- write(NrVezes).
 
 % Count an element - LIST OF LIST!!!!
-contaListaDeLista(_,[],NrVezes) :- write(NrVezes).
+contaListaDeLista(_,[],0).
 contaListaDeLista(Valor, [H|T], NrVezes) :-
   contaLista(Valor, H, T, NrVezes).
 contaLista(Valor, [H|T], L2, NrVezes):-
-  (Valor == H -> (Y is NrVezes + 1, contaLista(Valor, T, L2, Y)); contaLista(Valor, T, L2, NrVezes)).
+  (Valor == H -> (contaLista(Valor, T, L2, Y), NrVezes is Y + 1); contaLista(Valor, T, L2, NrVezes)).
 contaLista(Valor,[], L2, NrVezes) :- contaListaDeLista(Valor, L2, NrVezes).
+
+test2 :-
+  board(L1),
+  contaListaDeLista(x,L1,NrVezes), write(NrVezes), nl,
+  test(i).
 
 % Display First Line in a 'dynamic' way
 display_primeira(Inicio, Fim):-
   write('   '), Y is Inicio + 0, Inicio =< Fim, char_code(Imprime, Y), write(Imprime), X is Y +1, display_primeira(X, Fim).
 display_primeira(_, _).
-
-test2 :-
-  display_primeira("A","J"), nl,
-  test(i).
 
 
 % Verifica se Input � entre A-J
