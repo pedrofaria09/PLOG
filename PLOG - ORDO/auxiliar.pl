@@ -74,5 +74,14 @@ write('Valor invalido!'), nl, nl, askPlay(Y).
 par(N):- N mod 2 =:= 0.
 impar(N):- N mod 2 =:= 1.
 
+getNewLine :- 
+        get_code(T) , (T == 10 -> ! ; getNewLine).
+
+getDigit(D) :- 
+        get_code(Dt) , D is Dt - 48 , (Dt == 10 -> ! ; getNewLine).
+		
+getChar(C) :- 
+        get_char(C) , char_code(C, Co) , (Co == 10 -> ! ; getNewLine).
+		
 % Limpa o terminal
 cls :- write('\e[2J').

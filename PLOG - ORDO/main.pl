@@ -42,13 +42,13 @@ menu_mode :-
 	nl, nl,
 	mode.
 	
-menu_option :- write('Escrever o numero da escolha seguida de um ponto'), nl,
-	read(Input),
+menu_option :- write('Escrever o numero da escolha'), nl,
+	getDigit(Input),
 	!,
 	menu_options(Input).
 	
-mode :- write('Escrever o numero da escolha seguida de um ponto'), nl,
-	read(Input),
+mode :- write('Escrever o numero da escolha'), nl,
+	getDigit(Input),
 	!,
 	mode_options(Input).
 
@@ -76,35 +76,40 @@ gameArea(X) :- nl,
 askPlay :-	askPlay(1).
 
 askPlay(1) :- write('Digite a coluna (letra) da peca a mover'), nl,
-	read(ColunaToMove),
+	getChar(ColunaToMove),
 	letra(ColunaToMove,1),
 	askPlay(2).
 
 askPlay(2) :- write('Digite a linha (numero) da peca a mover'), nl,
-	read(LinhaToMove),
+	getDigit(LinhaToMove),
 	numero(LinhaToMove,2),
 	askPlay(3).
 
 askPlay(3) :- write('Digite a coluna (letra) do destino'), nl,
-	read(ColunaDestino),
+	getChar(ColunaDestino),
 	letra(ColunaDestino,3),
 	askPlay(4).
 
 askPlay(4) :- write('Digite a linha (numero) do destino'), nl,
-	read(LinhaDestino),
+	getDigit(LinhaDestino),
 	numero(LinhaDestino,4).
 
-jogar :- cls,
+jogar :- cls, nl,
 	write('Jogador vs Jogador'), nl,
 	jogada(1).
 
-jogar(1) :- cls,
+jogar(1) :- cls, nl,
 	write('Jogador vs Computador'), nl,
 	jogada(1).
 	
-jogar(2) :- cls,
+jogar(2) :- cls, nl,
 	write('Computador vs Computador'), nl,
 	jogada(1).
+	
+jogada(1) :- gameArea(1),
+	write('-> Jogam as brancas - (O)'), nl,
+	askPlay,
+	jogada(X+1).
 
 jogada(X) :- par(X), cls
 ,
