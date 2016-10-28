@@ -4,6 +4,33 @@ getElement(Matrix, Row, Col, Value):-
   nth1(Row, Matrix, MatrixRow),
   nth1(Col, MatrixRow, Value).
 
+ connected(Board, X, Y, Element):-
+  Value is X+1,
+  getElement(Board, Y, Value, Neighbor),
+  Element == Neighbor -> write('You are connected'), nl, true;
+  Value is X-1,
+  getElement(Board, Y, Value, Neighbor),
+  Element == Neighbor -> write('You are connected'), nl, true;
+  Value is Y-1,
+  getElement(Board, Value, X, Neighbor),
+  Element == Neighbor -> write('You are connected'), nl, true;
+  Value is Y+1,
+  getElement(Board, Value, X, Neighbor),
+  Element == Neighbor -> write('You are connected'), nl, true;
+  ValueX is X-1, ValueY is Y-1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('You are connected'), nl, true;
+  ValueX is X-1, ValueY is Y+1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('You are connected'), nl, true;
+  ValueX is X+1, ValueY is Y-1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('You are connected'), nl, true;
+  ValueX is X+1, ValueY is Y+1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('You are connected'), nl, true;
+  write('You are not connected!!! You need to connect on next move'), nl, nl.
+
 % Change content of the board
 changeTo(_,[],[],_,_).
 changeTo(ElemToChange,[[_|Xs]|Ys],[[ElemToChange|Xs1]|Ys1],1,1) :-
@@ -72,10 +99,9 @@ letra(_,X,L1) :- write('Letra invalida! Try Again'), nl, jogada(X,L1).
 numero(X,_,_) :- integer(X), X >= 1,  X =< 8.
 numero(_,X,L1) :- write('Valor invalido! Try Again'), nl, jogada(X,L1).
 
-verifyElementX(Element,_,_):- Element = 'x'.
-verifyElementX(_,X,L1):- write('You cant choose the opponent piece! Try Again'), nl, jogada(X,L1).
-verifyElementO(Element,_,_):- Element = 'o'.
-verifyElementO(_,X,L1):- write('You cant choose the opponent piece! Try Again'), nl, jogada(X,L1).
+verifyElementX(Element,X,L1):- (Element == 'x' -> (write('You cant choose the opponent piece! Try Again'), nl, jogada(X,L1)); true).
+verifyElementO(Element,X,L1):- (Element == 'o' -> (write('You cant choose the opponent piece! Try Again'), nl, jogada(X,L1)); true).
+verifyElementNone(Element,X,L1):- (Element == 'none' -> (write('You cant choose an empty piece! Try Again'), nl, jogada(X,L1)); true).
 
 % Verifica se um numero é par ou impar
 par(N):- N mod 2 =:= 0.

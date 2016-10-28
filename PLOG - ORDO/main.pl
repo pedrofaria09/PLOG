@@ -81,7 +81,7 @@ askPlay(ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, X, L1) :-
  	write('Digite a coluna (letra) do destino'), nl,
 	getChar(ColunaDestino),
 	letra(ColunaDestino, X, L1),
- 	write('Digite a linha (numero) do destino'), nl, nl,
+ 	write('Digite a linha (numero) do destino'), nl,
 	getDigit(LinhaDestino),
 	numero(LinhaDestino, X, L1).
 
@@ -104,10 +104,12 @@ jogada(X,L1) :- par(X),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(L1, OldY, OldXNumber, OldElement),
-	verifyElementX(OldElement,X,L1),
+	verifyElementNone(OldElement,X,L1),
+	verifyElementO(OldElement,X,L1),
 	getElement(L1, NewY, NewXNumber, NewElement),
 	changeBoard(NewElement, OldXNumber, OldY, L1, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard2),
+	connected(NewBoard2,NewXNumber,NewY, OldElement),
 	Y is X+1,
 	jogada(Y,NewBoard2).
 
@@ -118,10 +120,12 @@ jogada(X,L1) :- impar(X),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(L1, OldY, OldXNumber, OldElement),
-	verifyElementO(OldElement,X,L1),
+	verifyElementNone(OldElement,X,L1),
+	verifyElementX(OldElement,X,L1),
 	getElement(L1, NewY, NewXNumber, NewElement),
 	changeBoard(NewElement, OldXNumber, OldY, L1, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard2),
+	connected(NewBoard2,NewXNumber,NewY, OldElement),
 	Y is X+1,
 	jogada(Y, NewBoard2).
 
