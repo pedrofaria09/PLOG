@@ -4,7 +4,7 @@ getElement(Matrix, Row, Col, Value):-
   nth1(Row, Matrix, MatrixRow),
   nth1(Col, MatrixRow, Value).
 
- connected(Board, X, Y, Element):-
+ connected(Board, X, Y, Element, NrJogada):-
   Value is X+1,
   getElement(Board, Y, Value, Neighbor),
   Element == Neighbor -> write('You are connected'), nl, true;
@@ -29,7 +29,7 @@ getElement(Matrix, Row, Col, Value):-
   ValueX is X+1, ValueY is Y+1,
   getElement(Board, ValueY, ValueX, Neighbor),
   Element == Neighbor -> write('You are connected'), nl, true;
-  write('You are not connected!!! You need to connect on next move'), nl, nl.
+  nl, nl, write('You are not connected!!! You need to make a valid move!!! Try again'), jogada(NrJogada,Board).
 
 % Change content of the board
 changeTo(_,[],[],_,_).
@@ -102,6 +102,10 @@ numero(_,X,L1) :- write('Valor invalido! Try Again'), nl, jogada(X,L1).
 verifyElementX(Element,X,L1):- (Element == 'x' -> (write('You cant choose the opponent piece! Try Again'), nl, jogada(X,L1)); true).
 verifyElementO(Element,X,L1):- (Element == 'o' -> (write('You cant choose the opponent piece! Try Again'), nl, jogada(X,L1)); true).
 verifyElementNone(Element,X,L1):- (Element == 'none' -> (write('You cant choose an empty piece! Try Again'), nl, jogada(X,L1)); true).
+verifyPieceX(NewElement, X, L1, NewElement2):- ((NewElement == 'x' -> NewElement2 = 'none');
+  (NewElement == 'o' -> write('You cant choose your piece as destiny!!! Try Again'), jogada(X,L1)); NewElement2 = 'none').
+verifyPieceO(NewElement, X, L1, NewElement2):- ((NewElement == 'o' -> NewElement2 = 'none');
+  (NewElement == 'x' -> write('You cant choose your piece as destiny!!! Try Again'), jogada(X,L1)); NewElement2 = 'none').
 
 % Verifica se um numero é par ou impar
 par(N):- N mod 2 =:= 0.

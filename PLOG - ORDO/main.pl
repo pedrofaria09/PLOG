@@ -107,9 +107,11 @@ jogada(X,L1) :- par(X),
 	verifyElementNone(OldElement,X,L1),
 	verifyElementO(OldElement,X,L1),
 	getElement(L1, NewY, NewXNumber, NewElement),
-	changeBoard(NewElement, OldXNumber, OldY, L1, NewBoard1),
+	verifyPieceO(NewElement, X, L1, NewElement2),
+	connected(L1,NewXNumber,NewY, OldElement, X),
+	changeBoard(NewElement2, OldXNumber, OldY, L1, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard2),
-	connected(NewBoard2,NewXNumber,NewY, OldElement),
+	(NewY == 8 -> cls, endOfGame(X); true),
 	Y is X+1,
 	jogada(Y,NewBoard2).
 
@@ -123,12 +125,16 @@ jogada(X,L1) :- impar(X),
 	verifyElementNone(OldElement,X,L1),
 	verifyElementX(OldElement,X,L1),
 	getElement(L1, NewY, NewXNumber, NewElement),
-	changeBoard(NewElement, OldXNumber, OldY, L1, NewBoard1),
+	verifyPieceX(NewElement, X, L1, NewElement2),
+	connected(L1,NewXNumber,NewY, OldElement, X),
+	changeBoard(NewElement2, OldXNumber, OldY, L1, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard2),
-	connected(NewBoard2,NewXNumber,NewY, OldElement),
+	(NewY == 1 -> cls, endOfGame(X); true),
 	Y is X+1,
 	jogada(Y, NewBoard2).
 
+endOfGame(X):- impar(X),cls, write('White player win').
+endOfGame(X):- par(X),cls, write('Black player win').
 
 dados_jogo(Jogada, Numero_brancas, Numero_pretas) :-
 	format('Jogada numero: ~d', [Jogada]), nl,
