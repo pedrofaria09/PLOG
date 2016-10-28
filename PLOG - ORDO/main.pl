@@ -71,19 +71,19 @@ gameArea(X,L1) :- nl,
 	display_primeira("A","J"), nl,
 	display_board(1,L1).
 
-askPlay(ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino) :-
+askPlay(ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, X, L1) :-
 	write('Digite a coluna (letra) da peca a mover'), nl,
 	getChar(ColunaToMove),
-	letra(ColunaToMove),
+	letra(ColunaToMove, X, L1),
 	write('Digite a linha (numero) da peca a mover'), nl,
 	getDigit(LinhaToMove),
-	numero(LinhaToMove),
+	numero(LinhaToMove, X, L1),
  	write('Digite a coluna (letra) do destino'), nl,
 	getChar(ColunaDestino),
-	letra(ColunaDestino),
- 	write('Digite a linha (numero) do destino'), nl,
+	letra(ColunaDestino, X, L1),
+ 	write('Digite a linha (numero) do destino'), nl, nl,
 	getDigit(LinhaDestino),
-	numero(LinhaDestino).
+	numero(LinhaDestino, X, L1).
 
 jogar(L1) :- cls, nl,
 	write('Jogador vs Jogador'), nl,
@@ -100,30 +100,30 @@ jogar(2) :- cls, nl,
 jogada(X,L1) :- par(X),
 	gameArea(X, L1),
 	write('-> Jogam as Pretas - (X)'), nl,
-	askPlay(OldX, OldY, NewX, NewY),
+	askPlay(OldX, OldY, NewX, NewY, X, L1),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(L1, OldY, OldXNumber, OldElement),
-% Da um erro ao exetuar a proxima instrucao, nao sei ao certo o que se passa
-%	(OldElement == 'x' -> (write('You cant choose opponent piece -> Try again'), nl, jogada(X,L1))),
+	verifyElementX(OldElement,X,L1),
 	getElement(L1, NewY, NewXNumber, NewElement),
 	changeBoard(NewElement, OldXNumber, OldY, L1, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard2),
-	jogada(X+1,NewBoard2).
+	Y is X+1,
+	jogada(Y,NewBoard2).
 
 jogada(X,L1) :- impar(X),
 	gameArea(X, L1),
 	write('-> Jogam as brancas - (O)'), nl,
-	askPlay(OldX, OldY, NewX, NewY),
+	askPlay(OldX, OldY, NewX, NewY, X, L1),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(L1, OldY, OldXNumber, OldElement),
-% Da um erro ao exetuar a proxima instrucao, nao sei ao certo o que se passa
-%	(OldElement == 'x' -> (write('You cant choose opponent piece -> Try again'), nl, jogada(X,L1))),
+	verifyElementO(OldElement,X,L1),
 	getElement(L1, NewY, NewXNumber, NewElement),
 	changeBoard(NewElement, OldXNumber, OldY, L1, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard2),
-	jogada(X+1, NewBoard2).
+	Y is X+1,
+	jogada(Y, NewBoard2).
 
 
 dados_jogo(Jogada, Numero_brancas, Numero_pretas) :-

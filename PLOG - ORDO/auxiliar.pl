@@ -64,19 +64,20 @@ display_primeira(_, _).
 
 
 % Verifica se Input esta entre A-J
-letra(X) :- X = 'a'; X = 'b'; X = 'c'; X = 'd'; X = 'e';
+letra(X,_,_) :- X = 'a'; X = 'b'; X = 'c'; X = 'd'; X = 'e';
 X = 'f';  X = 'g';  X = 'h'; X = 'i';  X = 'j'.
-letra(_) :- nl,
-write('Valor invalido!'), nl, nl, askPlay(_,_,_,_).
+letra(_,X,L1) :- write('Letra invalida! Try Again'), nl, jogada(X,L1).
 
 % Verifica se Input esta entre 1-8
-numero(X) :- integer(X), X >= 1,  X =< 8.
-numero(_) :- nl,
-write('Valor invalido!'), nl, nl, askPlay(_,_,_,_).
+numero(X,_,_) :- integer(X), X >= 1,  X =< 8.
+numero(_,X,L1) :- write('Valor invalido! Try Again'), nl, jogada(X,L1).
 
+verifyElementX(Element,_,_):- Element = 'x'.
+verifyElementX(_,X,L1):- write('You cant choose the opponent piece! Try Again'), nl, jogada(X,L1).
+verifyElementO(Element,_,_):- Element = 'o'.
+verifyElementO(_,X,L1):- write('You cant choose the opponent piece! Try Again'), nl, jogada(X,L1).
 
-
-% Verifica se um n�mero � par ou �mpar
+% Verifica se um numero é par ou impar
 par(N):- N mod 2 =:= 0.
 impar(N):- N mod 2 =:= 1.
 
