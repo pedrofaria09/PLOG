@@ -4,7 +4,7 @@ getElement(Matrix, Row, Col, Value):-
   nth1(Row, Matrix, MatrixRow),
   nth1(Col, MatrixRow, Value).
 
-connected(Board, X, Y, Element, NrJogada):-
+connected(Board, Backup, X, Y, Element, NrJogada):-
   Value is X+1,
   getElement(Board, Y, Value, Neighbor),
   Element == Neighbor -> write('Estas conectado'), nl, true;
@@ -29,7 +29,7 @@ connected(Board, X, Y, Element, NrJogada):-
   ValueX is X+1, ValueY is Y+1,
   getElement(Board, ValueY, ValueX, Neighbor),
   Element == Neighbor -> write('Estas conectado'), nl, true;
-  nl, nl, write('AVISO!!!'), nl, write('Nao estas conectado, precisas de te conectar'), jogada(NrJogada,Board).
+  nl, nl, write('AVISO!!!'), nl, write('Nao estas conectado, precisas de te conectar'), jogada(NrJogada,Backup).
 
 % Change content of the board
 changeTo(_,[],[],_,_).
@@ -81,7 +81,7 @@ letterToNumber(Letra,Numero):-
   Letra == 'g' -> Numero is 7;
   Letra == 'h' -> Numero is 8;
   Letra == 'i' -> Numero is 9;
-  Letra == 'l' -> Numero is 10).
+  Letra == 'j' -> Numero is 10).
 
 
 % Display First Line in a 'dynamic' way
