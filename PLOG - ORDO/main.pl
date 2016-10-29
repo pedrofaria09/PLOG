@@ -133,8 +133,8 @@ jogada(X,L1) :- impar(X),
 	Y is X+1,
 	jogada(Y, NewBoard2).
 
-endOfGame(X):- impar(X),cls, write('White player win'),!.
-endOfGame(X):- par(X),cls, write('Black player win'),!.
+endOfGame(X):- impar(X),cls, write('Jogador Branco ganha.'),!.
+endOfGame(X):- par(X),cls, write('Jogador Preto ganha.'),!.
 
 dados_jogo(Jogada, Numero_brancas, Numero_pretas) :-
 	format('Jogada numero: ~d', [Jogada]), nl,
