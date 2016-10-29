@@ -3,41 +3,46 @@
 :-consult(logic).
 :-use_module(library(lists)).
 
-%Jogada Impar - Joga as Brancas - ' O '
-jogada(NumeroJogada,AtualBoard) :- impar(NumeroJogada),
-	gameArea(NumeroJogada, AtualBoard),
-	askTypeOfMove(TypeOfMove),
-	(TypeOfMove == 1 -> simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard); true),
-	(TypeOfMove == 2 -> askWhiteOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard, NewBoard3); true),
-	Y is NumeroJogada+1,
-	jogada(Y, NewBoard3).
-
 %Jogada Par - Joga as Pretas - ' X '
-jogada(NumeroJogada,AtualBoard) :- par(NumeroJogada),
+jogada(NumeroJogada,AtualBoard) :-
+	par(NumeroJogada),
 	gameArea(NumeroJogada, AtualBoard),
 	askTypeOfMove(TypeOfMove),
 	(TypeOfMove == 1 -> simpleBlackMove(NumeroJogada, AtualBoard, NewBoard); true),
 	(TypeOfMove == 2 -> askBlackOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard); true),
-	Y is NumeroJogada+1,
-	jogada(Y,NewBoard).
+	Y is NumeroJogada + 1,
+	jogada(Y, NewBoard).
 
-endOfGame(NumeroJogada):- impar(NumeroJogada),cls, write('Jogador Branco ganha.'),!.
-endOfGame(NumeroJogada):- par(NumeroJogada),cls, write('Jogador Preto ganha.'),!.
+%Jogada Impar - Joga as Brancas - ' O '
+jogada(NumeroJogada,AtualBoard) :-
+	impar(NumeroJogada),
+	gameArea(NumeroJogada, AtualBoard),
+	askTypeOfMove(TypeOfMove),
+	(TypeOfMove == 1 -> simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard); true),
+	(TypeOfMove == 2 -> askWhiteOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard); true),
+	Y is NumeroJogada + 1,
+	jogada(Y, NewBoard).
+
+endOfGame(NumeroJogada):- impar(NumeroJogada), cls, write('Jogador Branco ganha.'), !.
+endOfGame(NumeroJogada):- par(NumeroJogada), cls, write('Jogador Preto ganha.'), !.
 
 askTypeOfMove(TypeOfMove) :- write('Escolha tipo de jogada: '), nl,
 	write('1 - Simples'), nl,
 	write('2 - Ordo'), nl,
 	getDigit(TypeOfMove).
 
-askBlackOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard):-	write('Numero de pecas a mover: '), nl,
+askBlackOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard):-
+	write('Numero de pecas a mover: '), nl,
 	getDigit(NrMoves),
 	ordoBlackMove(NrMoves, NumeroJogada, AtualBoard, NewBoard).
 
-askWhiteOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard, NewBoard3):-	write('Numero de pecas a mover: '), nl,
+askWhiteOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard):-
+	write('Numero de pecas a mover: '), nl,
 	getDigit(NrMoves),
-	ordoWhiteMove(NrMoves, NumeroJogada, AtualBoard, NewBoard, NewBoard3).
+	ordoWhiteMove(NrMoves, NumeroJogada, AtualBoard, NewBoard).
 
-simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard) :- askPlay(OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
+simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard) :-
+	askPlay(OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
@@ -59,12 +64,16 @@ simpleBlackMove(NumeroJogada, AtualBoard, NewBoard) :- askPlay(OldX, OldY, NewX,
 	connected(NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
 	(NewY == 8 -> cls, endOfGame(NumeroJogada); true).
 
-ordoBlackMove(NrMoves, NumeroJogada, AtualBoard, NewBoard) :- ((NrMoves == 0) -> true;
+ordoBlackMove(NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
+	(NrMoves > 0 ->
+	Y is NrMoves - 1,
 	simpleBlackMove(NumeroJogada, AtualBoard, NewBoard),
-	Y is NrMoves-1,
-	ordoBlackMove(Y, NumeroJogada, NewBoard, NewBoard)).
+	gameArea(NumeroJogada, NewBoard),
+	ordoBlackMove(Y, NumeroJogada, NewBoard, _); Y is NumeroJogada + 1, jogada(Y, AtualBoard)).
 
-ordoWhiteMove(NrMoves, NumeroJogada, AtualBoard, NewBoard, NewBoard3) :- ((NrMoves == 0) -> true;
+ordoWhiteMove(NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
+	(NrMoves > 0 ->
+	Y is NrMoves - 1,
 	simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard),
-	Y is NrMoves-1,
-	ordoWhiteMove(Y, NumeroJogada, NewBoard, NewBoard3, NewBoard3)).
+	gameArea(NumeroJogada, NewBoard),
+	ordoWhiteMove(Y, NumeroJogada, NewBoard, _); Y is NumeroJogada + 1, jogada(Y, AtualBoard)).
