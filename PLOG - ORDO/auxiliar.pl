@@ -99,14 +99,6 @@ letra(_,X,L1) :- write('Letra invalida! Try Again'), nl, jogada(X,L1).
 numero(X,_,_) :- integer(X), X >= 1,  X =< 8.
 numero(_,X,L1) :- write('Valor invalido! Try Again'), nl, jogada(X,L1).
 
-verifyElementX(Element,X,L1):- (Element == 'x' -> (nl, nl, write('AVISO!!!'), nl, write('Nao podes escolher a peca de um oponente! Joga novamente'), nl, jogada(X,L1)); true).
-verifyElementO(Element,X,L1):- (Element == 'o' -> (nl, nl, write('AVISO!!!'), nl, write('Nao podes escolher a peca de um oponente! Joga novamente'), nl, jogada(X,L1)); true).
-verifyElementNone(Element,X,L1):- (Element == 'none' -> (nl, nl, write('AVISO!!!'), nl, write('Não podes escolher uma peca vazia! Joga novamente'), nl, jogada(X,L1)); true).
-verifyPieceX(NewElement, X, L1, NewElement2):- ((NewElement == 'x' -> NewElement2 = 'none');
-  (NewElement == 'o' -> nl, nl, write('AVISO!!!'), nl, write('Nao podes escolher a tua peca como destino! Joga novamente'), jogada(X,L1)); NewElement2 = 'none').
-verifyPieceO(NewElement, X, L1, NewElement2):- ((NewElement == 'o' -> NewElement2 = 'none');
-  (NewElement == 'x' -> nl, nl, write('AVISO!!!'), nl, write('Nao podes escolher a tua peca como destino! Joga novamente'), jogada(X,L1)); NewElement2 = 'none').
-
 % Verifica se um numero é par ou impar
 par(N):- N mod 2 =:= 0.
 impar(N):- N mod 2 =:= 1.
