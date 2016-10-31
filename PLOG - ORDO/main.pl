@@ -7,7 +7,7 @@
 jogada(NumeroJogada,AtualBoard) :-
 	par(NumeroJogada),
 	gameArea(NumeroJogada, AtualBoard),
-	askTypeOfMove(TypeOfMove),
+	askTypeOfMove(TypeOfMove,NumeroJogada,AtualBoard),
 	(TypeOfMove == 1 -> simpleBlackMove(NumeroJogada, AtualBoard, NewBoard); true),
 	(TypeOfMove == 2 -> askBlackOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard); true),
 	Y is NumeroJogada + 1,
@@ -17,32 +17,32 @@ jogada(NumeroJogada,AtualBoard) :-
 jogada(NumeroJogada,AtualBoard) :-
 	impar(NumeroJogada),
 	gameArea(NumeroJogada, AtualBoard),
-	askTypeOfMove(TypeOfMove),
-	(TypeOfMove == 1 -> simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard);
-	(TypeOfMove == 2 -> askWhiteOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard);
-	cls , nl, nl,
-	write('Numero Invalido! '), nl, nl,
-	jogada(NumeroJogada,AtualBoard))),
+	askTypeOfMove(TypeOfMove,NumeroJogada,AtualBoard),
+	(TypeOfMove == 1 -> simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard); true),
+	(TypeOfMove == 2 -> askWhiteOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard); true),
 	Y is NumeroJogada + 1,
 	jogada(Y, NewBoard).
 
 endOfGame(NumeroJogada):- impar(NumeroJogada), cls, write('Jogador Branco ganha.'), !.
 endOfGame(NumeroJogada):- par(NumeroJogada), cls, write('Jogador Preto ganha.'), !.
 
-askTypeOfMove(TypeOfMove) :- write('Escolha tipo de jogada: '), nl,
+askTypeOfMove(TypeOfMove,NumeroJogada,AtualBoard) :- write('Escolha tipo de jogada: '), nl,
 	write('1 - Simples'), nl,
 	write('2 - Ordo'), nl,
-	getDigit(TypeOfMove).
+	getDigit(TypeOfMove),
+	((TypeOfMove \= 1 , TypeOfMove \= 2) -> write('Valor errado, escolha novamente'), nl, jogada(NumeroJogada,AtualBoard);true).
 
 askBlackOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard):-
 	write('Numero de pecas a mover: '), nl,
 	getDigit(NrMoves),
-	ordoBlackMove(NrMoves, NumeroJogada, AtualBoard, NewBoard).
+	((NrMoves > 10) -> (write('Numero de pecas a mover errado, escolha novamente!'), nl, askBlackOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard));
+	ordoBlackMove(NrMoves, NumeroJogada, AtualBoard, NewBoard)).
 
 askWhiteOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard):-
 	write('Numero de pecas a mover: '), nl,
 	getDigit(NrMoves),
-	ordoWhiteMove(NrMoves, NumeroJogada, AtualBoard, NewBoard).
+	((NrMoves > 10) -> (write('Numero de pecas a mover errado, escolha novamente!'), nl, askWhiteOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard));
+	ordoWhiteMove(NrMoves, NumeroJogada, AtualBoard, NewBoard)).
 
 simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard) :-
 	askPlay(OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
@@ -79,6 +79,7 @@ ordoWhiteMove(0,_,AtualBoard,NewBoard):- NewBoard = AtualBoard.
 ordoWhiteMove(NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 	(NrMoves > 0 ->
 	Y is NrMoves - 1,
+	format('Tem ~d movimento(s) disponiveis', [NrMoves]), nl,
 	simpleWhiteMove(NumeroJogada, AtualBoard, BackBoard),
 	gameArea(NumeroJogada, BackBoard),
 	ordoWhiteMove(Y, NumeroJogada, BackBoard, NewBoard); true).
