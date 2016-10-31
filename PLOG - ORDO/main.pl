@@ -64,16 +64,18 @@ simpleBlackMove(NumeroJogada, AtualBoard, NewBoard) :- askPlay(OldX, OldY, NewX,
 	connected(NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
 	(NewY == 8 -> cls, endOfGame(NumeroJogada); true).
 
+ordoBlackMove(0,_,AtualBoard,NewBoard):- NewBoard = AtualBoard.
 ordoBlackMove(NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 	(NrMoves > 0 ->
 	Y is NrMoves - 1,
-	simpleBlackMove(NumeroJogada, AtualBoard, NewBoard),
-	gameArea(NumeroJogada, NewBoard),
-	ordoBlackMove(Y, NumeroJogada, NewBoard, _); Y is NumeroJogada + 1, jogada(Y, AtualBoard)).
+	simpleBlackMove(NumeroJogada, AtualBoard, BackBoard),
+	gameArea(NumeroJogada, BackBoard),
+	ordoBlackMove(Y, NumeroJogada, BackBoard, NewBoard); true).
 
+ordoWhiteMove(0,_,AtualBoard,NewBoard):- NewBoard = AtualBoard.
 ordoWhiteMove(NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 	(NrMoves > 0 ->
 	Y is NrMoves - 1,
-	simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard),
-	gameArea(NumeroJogada, NewBoard),
-	ordoWhiteMove(Y, NumeroJogada, NewBoard, _); Y is NumeroJogada + 1, jogada(Y, AtualBoard)).
+	simpleWhiteMove(NumeroJogada, AtualBoard, BackBoard),
+	gameArea(NumeroJogada, BackBoard),
+	ordoWhiteMove(Y, NumeroJogada, BackBoard, NewBoard); true).
