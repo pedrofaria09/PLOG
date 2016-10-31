@@ -18,8 +18,11 @@ jogada(NumeroJogada,AtualBoard) :-
 	impar(NumeroJogada),
 	gameArea(NumeroJogada, AtualBoard),
 	askTypeOfMove(TypeOfMove),
-	(TypeOfMove == 1 -> simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard); true),
-	(TypeOfMove == 2 -> askWhiteOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard); true),
+	(TypeOfMove == 1 -> simpleWhiteMove(NumeroJogada, AtualBoard, NewBoard);
+	(TypeOfMove == 2 -> askWhiteOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard);
+	cls , nl, nl,
+	write('Numero Invalido! '), nl, nl,
+	jogada(NumeroJogada,AtualBoard))),
 	Y is NumeroJogada + 1,
 	jogada(Y, NewBoard).
 
