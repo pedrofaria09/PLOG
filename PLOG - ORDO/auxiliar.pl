@@ -29,7 +29,7 @@ connected(1, Board, Backup, X, Y, Element, NrJogada):-
   ValueX is X+1, ValueY is Y+1,
   getElement(Board, ValueY, ValueX, Neighbor),
   Element == Neighbor -> write('Estas conectado'), nl, true;
-  nl, nl, write('AVISO!!!'), nl, write('Nao estas conectado, precisas de te conectar'), jogada(NrJogada,Backup).
+  nl, nl, write('AVISO!!!'), nl, write('Nao estas conectado, precisas de te conectar'), jogada(NrJogada,Backup), break.
   
  connected(2, Board, Backup, X, Y, Element, NrJogada):-
   Value is X+1,

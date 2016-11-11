@@ -11,7 +11,7 @@ jogada(NumeroJogada,AtualBoard) :-
 	par(NumeroJogada),
 	gameArea(NumeroJogada, AtualBoard),
 	askTypeOfMove(1, TypeOfMove,NumeroJogada,AtualBoard),
-	(TypeOfMove == 1 -> simpleBlackMove(NumeroJogada, AtualBoard, NewBoard); true),
+	(TypeOfMove == 1 -> simpleBlackMove(1, NumeroJogada, AtualBoard, NewBoard); true),
 	(TypeOfMove == 2 -> askBlackOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard); true),
 	Y is NumeroJogada + 1,
 	jogada(Y, NewBoard).
@@ -63,7 +63,7 @@ simpleWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
 	connected(TipoJogo,NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
-	(NewY == 1 -> cls, endOfGame(NumeroJogada); true).
+	(NewY == 1 -> cls, finalgameArea(NewBoard), !, nl, nl, endOfGame(NumeroJogada), break; true).
 
 simpleBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :- askPlay(OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
@@ -74,8 +74,8 @@ simpleBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :- askPlay(OldX, O
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
 	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
-	(NewY == 8 -> cls, endOfGame(NumeroJogada); true).
-
+	(NewY == 8 -> cls, finalgameArea(NewBoard), !, nl, nl, endOfGame(NumeroJogada), break; true).
+	
 ordoBlackMove(_,0,_,AtualBoard,NewBoard):- NewBoard = AtualBoard.
 ordoBlackMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 	(NrMoves > 0 ->
@@ -98,11 +98,19 @@ ordoWhiteMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 %Jogada Par - Joga as Pretas - ' X ' - COMPUTADOR
 jogadorvscomputador(NumeroJogada,AtualBoard) :-
 	par(NumeroJogada),
-	gameArea(NumeroJogada, AtualBoard),
 	simpleRandoomBlackMove(2, NumeroJogada, AtualBoard, NewBoard),
+	gameArea(NumeroJogada, AtualBoard),
 	Y is NumeroJogada + 1,
 	jogadorvscomputador(Y, NewBoard).
 
+%Jogada 1 - Joga as Brancas - ' O ' - JOGADOR
+jogadorvscomputador(1,AtualBoard) :-
+	gameArea(1, AtualBoard),
+	askTypeOfMove(2, TypeOfMove, 1, AtualBoard),
+	(TypeOfMove == 1 -> simpleWhiteMove(2, 1, AtualBoard, NewBoard); true),
+	(TypeOfMove == 2 -> askWhiteOrdoNrMoves(2, 1, AtualBoard, NewBoard); true),
+	jogadorvscomputador(2, NewBoard).
+	
 %Jogada Impar - Joga as Brancas - ' O ' - JOGADOR
 jogadorvscomputador(NumeroJogada,AtualBoard) :-
 	impar(NumeroJogada),
@@ -151,7 +159,7 @@ computadorvscomputador(NumeroJogada,AtualBoard) :-
 	Y is NumeroJogada + 1,
 	computadorvscomputador(Y, NewBoard).
 
-%Jogada Impar - Joga as Brancas - ' O ' - JOGADOR
+%Jogada 1 - Joga as Brancas - ' O ' - JOGADOR
 computadorvscomputador(1,AtualBoard) :-
 	gameArea(1, AtualBoard),
 	simpleRandoomWhiteMove(3, 1, AtualBoard, NewBoard),!,
