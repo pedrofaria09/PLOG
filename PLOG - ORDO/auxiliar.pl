@@ -31,6 +31,56 @@ connected(Board, Backup, X, Y, Element, NrJogada):-
   Element == Neighbor -> write('Estas conectado'), nl, true;
   nl, nl, write('AVISO!!!'), nl, write('Nao estas conectado, precisas de te conectar'), jogada(NrJogada,Backup).
 
+board3([
+  [x, x, x, x, none, none, x, x, none, none],
+	[x, x, x, x, none, x, x, x, x, x],
+	[x, x, x, x, none, x, none, none, x, x],
+	[none, none, none, none, none, none, none, none, none, none],
+	[none, none, none, none, none, none, none, none, none, none],
+	[o, o, none, none, none, o, none, none, o, o],
+	[o, o, o, o, none, o, none, o, o, o],
+	[none, none, none, o, none, none, o, o, none, none]]).
+
+:-dynamic dyBoard/1.
+
+verifyConnection(X, Y, Element):- dyBoard(BackBoard),
+  changeBoard(none,X,Y,BackBoard,NewBoard), retract(dyBoard(_)), asserta(dyBoard(NewBoard)),
+  (dyBoard(List), ValueX is X + 1, ValueY is Y + 0, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X + 1, ValueY is Y + 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X + 0, ValueY is Y + 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X - 1, ValueY is Y + 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X - 1, ValueY is Y - 0, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X - 1, ValueY is Y - 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X - 0, ValueY is Y - 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X + 1, ValueY is Y - 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  !).
+
+teste(1):-
+  board3(BoardToTest),
+  display_board(1,BoardToTest),
+  asserta(dyBoard(BoardToTest)),
+  getPositionElement(x,BoardToTest,ValueX,ValueY),
+  verifyConnection(ValueX, ValueY, x),
+  dyBoard(List),retract(dyBoard(_)),
+  contaListaDeLista(x, List, NrAfter), write(NrAfter),nl,
+  (NrAfter > 0, write('You are not connected'), nl;
+  NrAfter == 0, write('You are connected'), nl),
+  display_board(1,List), display_board(1,BoardToTest).
+
+verifyElementConnection(BoardToTest, Element, Return):-
+  asserta(dyBoard(BoardToTest)),
+  getPositionElement(Element,BoardToTest,ValueX,ValueY),
+  verifyConnection(ValueX, ValueY, Element),
+  dyBoard(List),retract(dyBoard(_)),
+  contaListaDeLista(Element, List, NrElements),
+  ((NrElements > 0, Return is 0);
+  (NrElements == 0, Return is 1)).
+
+getPositionElement(Element,Board,ValueX,ValueY):-
+  random(1,11,X), random(1,9,Y), getElement(Board, Y, X, ElementToCheck),
+  ((Element \= ElementToCheck), getPositionElement(Element,Board,ValueX,ValueY);
+  ValueX is X, ValueY is Y).
+
 % Change content of the board
 changeTo(_,[],[],_,_).
 changeTo(ElemToChange,[[_|Xs]|Ys],[[ElemToChange|Xs1]|Ys1],1,1) :-
@@ -108,7 +158,7 @@ getNewLine :-
 
 getDigit(D) :-
         get_code(Dt) , D is Dt - 48 , (Dt == 10 -> ! ; getNewLine).
-		
+
 getChar(C) :-
         get_char(C) , char_code(C, Co) , (Co == 10 -> ! ; getNewLine).
 

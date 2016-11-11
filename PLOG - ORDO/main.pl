@@ -2,6 +2,7 @@
 :-consult(display).
 :-consult(logic).
 :-use_module(library(lists)).
+:-use_module(library(random)).
 
 %Jogada Par - Joga as Pretas - ' X '
 jogada(NumeroJogada,AtualBoard) :-
