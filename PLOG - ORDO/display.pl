@@ -59,9 +59,9 @@ menu_options(_) :- nl,
 	nl,
 	menu_option.
 
-mode_options(1) :- jogar.
-mode_options(2) :- jogar(1).
-mode_options(3) :- jogar(2).
+mode_options(1) :- board(L1),jogar(L1).
+mode_options(2) :- board(L1),jogar(1, L1).
+mode_options(3) :- board(L1),jogar(2, L1).
 
 
 gameArea(X,L1) :- nl,
@@ -89,13 +89,13 @@ jogar(L1) :- cls, nl,
 	write('Jogador vs Jogador'), nl,
 	jogada(1,L1).
 
-jogar(1) :- cls, nl,
+jogar(1, L1) :- cls, nl,
 	write('Jogador vs Computador'), nl,
-	jogada(1).
+	jogadorvscomputador(1, L1).
 
-jogar(2) :- cls, nl,
+jogar(2, L1) :- cls, nl,
 	write('Computador vs Computador'), nl,
-	jogada(1).
+	computadorvscomputador(1, L1).
 
 gameData(Jogada, Numero_brancas, Numero_pretas) :-
 	par(Jogada),
