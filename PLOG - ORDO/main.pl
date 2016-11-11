@@ -3,7 +3,6 @@
 :-consult(logic).
 :-use_module(library(random)).
 :-use_module(library(lists)).
-:- use_module(library(unix)).
 
 %############################# JOGADOR vs JOGADOR ###############################
 %Jogada Par - Joga as Pretas - ' X '
