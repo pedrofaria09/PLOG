@@ -75,19 +75,19 @@ finalgameArea(L1) :- nl,
 	display_primeira("A","J"), nl,
 	display_board(1,L1), nl.
 
-askPlay(ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, X, L1) :-
+askPlay(TipoJogo, ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, X, L1) :-
 	write('Digite a coluna (letra) da peca a mover'), nl,
 	getChar(ColunaToMove),
-	letra(ColunaToMove, X, L1),
+	letra(TipoJogo, ColunaToMove, X, L1),
 	write('Digite a linha (numero) da peca a mover'), nl,
 	getDigit(LinhaToMove),
-	numero(LinhaToMove, X, L1),
+	numero(TipoJogo, LinhaToMove, X, L1),
  	write('Digite a coluna (letra) do destino'), nl,
 	getChar(ColunaDestino),
-	letra(ColunaDestino, X, L1),
+	letra(TipoJogo, ColunaDestino, X, L1),
  	write('Digite a linha (numero) do destino'), nl,
 	getDigit(LinhaDestino),
-	numero(LinhaDestino, X, L1).
+	numero(TipoJogo, LinhaDestino, X, L1).
 
 jogar(L1) :- cls, nl,
 	write('Jogador vs Jogador'), nl,

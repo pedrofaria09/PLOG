@@ -55,7 +55,7 @@ askWhiteOrdoNrMoves(TipoJogo, NumeroJogada, AtualBoard, NewBoard):-
 simpleWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, o, Return),
 	((Return == 0) ->  warningNotConnected(1); true),
-	askPlay(OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
+	askPlay(TipoJogo, OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
@@ -71,7 +71,7 @@ simpleWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 simpleBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, x, Return),
 	((Return == 0) -> warningNotConnected(1); true),
-	askPlay(OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
+	askPlay(TipoJogo, OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
