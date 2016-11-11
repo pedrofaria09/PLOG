@@ -197,13 +197,14 @@ display_primeira(_, _).
 % Verifica se Input esta entre A-J
 letra(_,X,_,_) :- X = 'a'; X = 'b'; X = 'c'; X = 'd'; X = 'e';
 X = 'f';  X = 'g';  X = 'h'; X = 'i';  X = 'j'.
-letra(1,_,X,L1) :- write('Letra invalida! Try Again'), nl, jogada(X,L1).
-letra(2,_,X,L1) :- write('Letra invalida! Try Again'), nl, jogadorvscomputador(X,L1).
+letra(1,_,X,L1) :- write('1Letra invalida! Try Again'), nl, jogada(X,L1).
+letra(2,_,X,L1) :- write('2Letra invalida! Try Again'), nl, jogadorvscomputador(X,L1).
 
 % Verifica se Input esta entre 1-8
-numero(_,X,_,_) :- integer(X), X >= 1,  X =< 8.
-numero(1,_,X,L1) :- write('Valor invalido! Try Again'), nl, jogada(X,L1).
-numero(2,_,X,L1) :- write('Valor invalido! Try Again'), nl, jogadorvscomputador(X,L1).
+numero(1,X,_,_) :- integer(X), X >= 1,  X =< 8.
+numero(2,X,_,_) :- integer(X), X >= 1,  X =< 8.
+numero(1,_,X,L1) :- write('1Valor invalido! Try Again'), nl, jogada(X,L1).
+numero(2,_,X,L1) :- write('2Valor invalido! Try Again  - '), write(X), nl, jogadorvscomputador(X,L1).
 
 % Verifica se um numero é par ou impar
 par(N):- N mod 2 =:= 0.
