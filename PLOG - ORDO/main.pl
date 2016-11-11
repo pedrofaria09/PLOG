@@ -26,8 +26,8 @@ jogada(NumeroJogada,AtualBoard) :-
 	Y is NumeroJogada + 1,
 	jogada(Y, NewBoard).
 
-endOfGame(NumeroJogada):- impar(NumeroJogada), cls, write('Jogador Branco ganha.'), !.
-endOfGame(NumeroJogada):- par(NumeroJogada), cls, write('Jogador Preto ganha.'), !.
+endOfGame(NumeroJogada):- impar(NumeroJogada), write('Jogador Branco ganha.'), !.
+endOfGame(NumeroJogada):- par(NumeroJogada), write('Jogador Preto ganha.'), !.
 
 askTypeOfMove(1, TypeOfMove, NumeroJogada, AtualBoard) :- write('Escolha tipo de jogada: '), nl,
 	write('1 - Simples'), nl,
@@ -125,7 +125,7 @@ simpleRandoomBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
 	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
-	(NewY == 8 -> cls, 	gameArea(NumeroJogada, NewBoard), nl, nl, endOfGame(NumeroJogada), break; true).
+	(NewY == 8 -> cls, 	finalgameArea(NewBoard), !, nl, nl, endOfGame(NumeroJogada), break; true).
 	
 simpleRandoomWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	random(1, 10, OldXNumber),
@@ -138,7 +138,7 @@ simpleRandoomWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
 	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
-	(NewY == 1 -> cls, 	gameArea(NumeroJogada, NewBoard), nl, nl, endOfGame(NumeroJogada), break; true).
+	(NewY == 1 -> finalgameArea(NewBoard), !, nl, nl, endOfGame(NumeroJogada), break; true).
 	
 	
 %############################# COMPUTADOR vs COMPUTADOR ###############################
