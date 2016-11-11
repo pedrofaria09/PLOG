@@ -74,7 +74,7 @@ gameArea(X,L1) :- nl,
 finalgameArea(L1) :- nl,
 	display_primeira("A","J"), nl,
 	display_board(1,L1), nl.
-	
+
 askPlay(ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, X, L1) :-
 	write('Digite a coluna (letra) da peca a mover'), nl,
 	getChar(ColunaToMove),
@@ -114,6 +114,8 @@ gameData(Jogada, Numero_brancas, Numero_pretas) :-
 	format('Jogada numero: ~d', [Jogada]), nl,
 	format('Brancas: ~w', [Numero_brancas]), nl,
 	format('Pretas: ~w', [Numero_pretas]), nl.
+
+warningNotConnected(1) :- nl,nl,write('AVISO!!! - TENS DE CONECTAR-TE NESTA JOGADA!!!'), nl,nl,nl.
 
 %=======================%
 % Board display

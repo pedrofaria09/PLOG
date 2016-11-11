@@ -30,7 +30,7 @@ connected(1, Board, Backup, X, Y, Element, NrJogada):-
   getElement(Board, ValueY, ValueX, Neighbor),
   Element == Neighbor -> write('Estas conectado'), nl, true;
   nl, nl, write('AVISO!!!'), nl, write('Nao estas conectado, precisas de te conectar'), jogada(NrJogada,Backup), break.
-  
+
  connected(2, Board, Backup, X, Y, Element, NrJogada):-
   Value is X+1,
   getElement(Board, Y, Value, Neighbor),
@@ -57,7 +57,7 @@ connected(1, Board, Backup, X, Y, Element, NrJogada):-
   getElement(Board, ValueY, ValueX, Neighbor),
   Element == Neighbor -> write('Estas conectado'), nl, true;
   jogadorvscomputador(NrJogada,Backup), break.
-  
+
  connected(3, Board, Backup, X, Y, Element, NrJogada):-
   Value is X+1,
   getElement(Board, Y, Value, Neighbor),
@@ -123,8 +123,8 @@ teste(1):-
 
 verifyElementConnection(BoardToTest, Element, Return):-
   asserta(dyBoard(BoardToTest)),
-  getPositionElement(Element,BoardToTest,ValueX,ValueY),
-  verifyConnection(ValueX, ValueY, Element),
+  getPositionElement(Element,BoardToTest,Xval,Yval),
+  verifyConnection(Xval, Yval, Element),
   dyBoard(List),retract(dyBoard(_)),
   contaListaDeLista(Element, List, NrElements),
   ((NrElements > 0, Return is 0);
