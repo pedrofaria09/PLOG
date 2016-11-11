@@ -4,7 +4,7 @@ getElement(Matrix, Row, Col, Value):-
   nth1(Row, Matrix, MatrixRow),
   nth1(Col, MatrixRow, Value).
 
-connected(Board, Backup, X, Y, Element, NrJogada):-
+connected(1, Board, Backup, X, Y, Element, NrJogada):-
   Value is X+1,
   getElement(Board, Y, Value, Neighbor),
   Element == Neighbor -> write('Estas conectado'), nl, true;
@@ -30,6 +30,60 @@ connected(Board, Backup, X, Y, Element, NrJogada):-
   getElement(Board, ValueY, ValueX, Neighbor),
   Element == Neighbor -> write('Estas conectado'), nl, true;
   nl, nl, write('AVISO!!!'), nl, write('Nao estas conectado, precisas de te conectar'), jogada(NrJogada,Backup).
+  
+ connected(2, Board, Backup, X, Y, Element, NrJogada):-
+  Value is X+1,
+  getElement(Board, Y, Value, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Value is X-1,
+  getElement(Board, Y, Value, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Value is Y-1,
+  getElement(Board, Value, X, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Value is Y+1,
+  getElement(Board, Value, X, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  ValueX is X-1, ValueY is Y-1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  ValueX is X-1, ValueY is Y+1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  ValueX is X+1, ValueY is Y-1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  ValueX is X+1, ValueY is Y+1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  jogadorvscomputador(NrJogada,Backup), break.
+  
+ connected(3, Board, Backup, X, Y, Element, NrJogada):-
+  Value is X+1,
+  getElement(Board, Y, Value, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Value is X-1,
+  getElement(Board, Y, Value, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Value is Y-1,
+  getElement(Board, Value, X, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Value is Y+1,
+  getElement(Board, Value, X, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  ValueX is X-1, ValueY is Y-1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  ValueX is X-1, ValueY is Y+1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  ValueX is X+1, ValueY is Y-1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  ValueX is X+1, ValueY is Y+1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Estas conectado'), nl, true;
+  computadorvscomputador(NrJogada,Backup), break.
 
 % Change content of the board
 changeTo(_,[],[],_,_).

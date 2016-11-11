@@ -95,7 +95,7 @@ jogar(1, L1) :- cls, nl,
 
 jogar(2, L1) :- cls, nl,
 	write('Computador vs Computador'), nl,
-	jogada(1, L1).
+	computadorvscomputador(1, L1).
 
 gameData(Jogada, Numero_brancas, Numero_pretas) :-
 	par(Jogada),
