@@ -71,6 +71,10 @@ gameArea(X,L1) :- nl,
 	display_primeira("A","J"), nl,
 	display_board(1,L1).
 
+finalgameArea(L1) :- nl,
+	display_primeira("A","J"), nl,
+	display_board(1,L1), nl.
+	
 askPlay(ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, X, L1) :-
 	write('Digite a coluna (letra) da peca a mover'), nl,
 	getChar(ColunaToMove),
