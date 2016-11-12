@@ -204,7 +204,7 @@ letra(2,_,X,L1) :- write('2Letra invalida! Try Again'), nl, jogadorvscomputador(
 numero(1,X,_,_) :- integer(X), X >= 1,  X =< 8.
 numero(2,X,_,_) :- integer(X), X >= 1,  X =< 8.
 numero(1,_,X,L1) :- write('1Valor invalido! Try Again'), nl, jogada(X,L1).
-numero(2,_,X,L1) :- write('2Valor invalido! Try Again  - '), write(X), nl, jogadorvscomputador(X,L1).
+numero(2,_,X,L1) :- write('2Valor invalido! Try Again'), nl, jogadorvscomputador(X,L1).
 
 % Verifica se um numero é par ou impar
 par(N):- N mod 2 =:= 0.
