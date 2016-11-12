@@ -11,7 +11,7 @@ jogada(NumeroJogada,AtualBoard) :-
 	par(NumeroJogada),
 	gameArea(NumeroJogada, AtualBoard),
 	askTypeOfMove(1, TypeOfMove,NumeroJogada,AtualBoard),
-	(TypeOfMove == 1 -> simpleBlackMove(NumeroJogada, AtualBoard, NewBoard); true),
+	(TypeOfMove == 1 -> simpleBlackMove(1,NumeroJogada, AtualBoard, NewBoard); true),
 	(TypeOfMove == 2 -> askBlackOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard); true),
 	Y is NumeroJogada + 1,
 	jogada(Y, NewBoard).
@@ -29,17 +29,12 @@ jogada(NumeroJogada,AtualBoard) :-
 endOfGame(NumeroJogada):- impar(NumeroJogada), write('Jogador Branco ganha.'), nl, nl, nl, break.
 endOfGame(NumeroJogada):- par(NumeroJogada), write('Jogador Preto ganha.'), nl, nl, nl, break.
 
-askTypeOfMove(1, TypeOfMove, NumeroJogada, AtualBoard) :- write('Escolha tipo de jogada: '), nl,
+askTypeOfMove(TipoJogo, TypeOfMove, NumeroJogada, AtualBoard) :- write('Escolha tipo de jogada: '), nl,
 	write('1 - Simples'), nl,
 	write('2 - Ordo'), nl,
 	getDigit(TypeOfMove),
-	((TypeOfMove \= 1 , TypeOfMove \= 2) -> write('Valor errado, escolha novamente'), nl, jogada(NumeroJogada,AtualBoard);true).
-
-askTypeOfMove(2, TypeOfMove, NumeroJogada, AtualBoard) :- write('Escolha tipo de jogada: '), nl,
-	write('1 - Simples'), nl,
-	write('2 - Ordo'), nl,
-	getDigit(TypeOfMove),
-	((TypeOfMove \= 1 , TypeOfMove \= 2) -> write('Valor errado, escolha novamente'), nl, jogadorvscomputador(NumeroJogada,AtualBoard);true).
+	((TypeOfMove == 1 ; TypeOfMove == 2) -> true;
+	write('Valor errado, escolha novamente'), nl, (TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard); TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard))).
 
 askBlackOrdoNrMoves(NumeroJogada, AtualBoard, NewBoard):-
 	write('Numero de pecas a mover: '), nl,
@@ -53,10 +48,24 @@ askWhiteOrdoNrMoves(TipoJogo, NumeroJogada, AtualBoard, NewBoard):-
 	((NrMoves > 10) -> (write('Numero de pecas a mover errado, escolha novamente!'), nl, askWhiteOrdoNrMoves(TipoJogo, NumeroJogada, AtualBoard, NewBoard));
 	ordoWhiteMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard)).
 
+askPlay(TipoJogo, ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, NrJogada, Board) :-
+	write('Digite a coluna (letra) da peca a mover'), nl,
+	getChar(ColunaToMove),
+	letra(TipoJogo, ColunaToMove, NrJogada, Board),
+	write('Digite a linha (numero) da peca a mover'), nl,
+	getDigit(LinhaToMove),
+	numero(TipoJogo, LinhaToMove, NrJogada, Board),
+ 	write('Digite a coluna (letra) do destino'), nl,
+	getChar(ColunaDestino),
+	letra(TipoJogo, ColunaDestino, NrJogada, Board),
+ 	write('Digite a linha (numero) do destino'), nl,
+	getDigit(LinhaDestino),
+	numero(TipoJogo, LinhaDestino, NrJogada, Board).
+
 simpleWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, o, Return),
 	((Return == 0) ->  warningNotConnected(1); true),
-	askPlay(OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
+	askPlay(TipoJogo, OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
@@ -72,7 +81,7 @@ simpleWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 simpleBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, x, Return),
 	((Return == 0) -> warningNotConnected(1); true),
-	askPlay(OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
+	askPlay(TipoJogo, OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),

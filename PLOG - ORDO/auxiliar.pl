@@ -4,97 +4,33 @@ getElement(Matrix, Row, Col, Value):-
   nth1(Row, Matrix, MatrixRow),
   nth1(Col, MatrixRow, Value).
 
-connected(1, Board, Backup, X, Y, Element, NrJogada):-
+connected(TipoJogo, Board, Backup, X, Y, Element, NrJogada):-
   Value is X+1,
   getElement(Board, Y, Value, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Element == Neighbor -> write('Peca esta conectada'), nl, true;
   Value is X-1,
   getElement(Board, Y, Value, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Element == Neighbor -> write('Peca esta conectada'), nl, true;
   Value is Y-1,
   getElement(Board, Value, X, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Element == Neighbor -> write('Peca esta conectada'), nl, true;
   Value is Y+1,
   getElement(Board, Value, X, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Element == Neighbor -> write('Peca esta conectada'), nl, true;
   ValueX is X-1, ValueY is Y-1,
   getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Element == Neighbor -> write('Peca esta conectada'), nl, true;
   ValueX is X-1, ValueY is Y+1,
   getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Element == Neighbor -> write('Peca esta conectada'), nl, true;
   ValueX is X+1, ValueY is Y-1,
   getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
+  Element == Neighbor -> write('Peca esta conectada'), nl, true;
   ValueX is X+1, ValueY is Y+1,
   getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  nl, nl, write('AVISO!!!'), nl, write('Nao estas conectado, precisas de te conectar'), jogada(NrJogada,Backup).
-
- connected(2, Board, Backup, X, Y, Element, NrJogada):-
-  Value is X+1,
-  getElement(Board, Y, Value, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  Value is X-1,
-  getElement(Board, Y, Value, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  Value is Y-1,
-  getElement(Board, Value, X, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  Value is Y+1,
-  getElement(Board, Value, X, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  ValueX is X-1, ValueY is Y-1,
-  getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  ValueX is X-1, ValueY is Y+1,
-  getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  ValueX is X+1, ValueY is Y-1,
-  getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  ValueX is X+1, ValueY is Y+1,
-  getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  jogadorvscomputador(NrJogada,Backup), break.
-
- connected(3, Board, Backup, X, Y, Element, NrJogada):-
-  Value is X+1,
-  getElement(Board, Y, Value, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  Value is X-1,
-  getElement(Board, Y, Value, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  Value is Y-1,
-  getElement(Board, Value, X, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  Value is Y+1,
-  getElement(Board, Value, X, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  ValueX is X-1, ValueY is Y-1,
-  getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  ValueX is X-1, ValueY is Y+1,
-  getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  ValueX is X+1, ValueY is Y-1,
-  getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  ValueX is X+1, ValueY is Y+1,
-  getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Estas conectado'), nl, true;
-  computadorvscomputador(NrJogada,Backup), break.
-
-board3([
-  [x, x, x, x, none, none, x, x, none, none],
-	[x, x, x, x, none, x, x, x, x, x],
-	[x, x, x, x, none, x, none, none, x, x],
-	[none, none, none, none, none, none, none, none, none, none],
-	[none, none, none, none, none, none, none, none, none, none],
-	[o, o, none, none, none, o, none, none, o, o],
-	[o, o, o, o, none, o, none, o, o, o],
-	[none, none, none, o, none, none, o, o, none, none]]).
-
+  Element == Neighbor -> write('Peca esta conectada'), nl, true;
+  nl, nl, write('AVISO!!!'), nl, write('Jogada invalida, precisas de estar conectado!!!'), nl,nl,
+  (TipoJogo == 1 -> jogada(NrJogada,Backup); TipoJogo == 2 -> jogadorvscomputador(NrJogada,Backup); TipoJogo == 3 -> computadorvscomputador(NrJogada,Backup)).
 
 :-dynamic dyBoard/1.
 
@@ -109,18 +45,6 @@ verifyConnection(X, Y, Element):- dyBoard(BackBoard),
   dyBoard(List), ValueX is X - 0, ValueY is Y - 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
   dyBoard(List), ValueX is X + 1, ValueY is Y - 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
   !).
-
-teste(1):-
-  board3(BoardToTest),
-  display_board(1,BoardToTest),
-  asserta(dyBoard(BoardToTest)),
-  getPositionElement(x,BoardToTest,ValueX,ValueY),
-  verifyConnection(ValueX, ValueY, x),
-  dyBoard(List),retract(dyBoard(_)),
-  contaListaDeLista(x, List, NrAfter), write(NrAfter),nl,
-  (NrAfter > 0, write('You are not connected'), nl;
-  NrAfter == 0, write('You are connected'), nl),
-  display_board(1,List), display_board(1,BoardToTest).
 
 verifyElementConnection(BoardToTest, Element, Return):-
   asserta(dyBoard(BoardToTest)),
@@ -196,11 +120,15 @@ display_primeira(_, _).
 
 
 % Verifica se Input esta entre A-J
-letra(X,NrJogada,Board) :- X == 'a'; X == 'b'; X == 'c'; X == 'd'; X == 'e';
-X == 'f';  X == 'g';  X == 'h'; X == 'i';  X == 'j'; write('Letra invalida! Try Again'), nl, jogada(NrJogada,Board).
+letra(TipoJogo, X, NrJogada, Board) :- X == 'a'; X == 'b'; X == 'c'; X == 'd'; X == 'e';
+X == 'f';  X == 'g';  X == 'h'; X == 'i';  X == 'j';
+(nl, write('Letra invalida! Tente novamente!!!'), nl,
+(TipoJogo == 1 -> jogada(NrJogada,Board); TipoJogo == 2 -> jogadorvscomputador(NrJogada,Board))).
 
 % Verifica se Input esta entre 1-8
-numero(X,NrJogada,Board) :- (X > 0,  X < 9, true); (write(X), write('1 Valor invalido! Try Again'), nl, jogada(NrJogada,Board)).
+numero(TipoJogo, X, NrJogada, Board) :- (integer(X), X > 0,  X < 9, true);
+(nl, write('Numero invalido! Tente novamente!!!'), nl,
+(TipoJogo == 1 -> jogada(NrJogada,Board); TipoJogo == 2 -> jogadorvscomputador(NrJogada,Board))).
 
 % Verifica se um numero é par ou impar
 par(N):- N mod 2 =:= 0.
