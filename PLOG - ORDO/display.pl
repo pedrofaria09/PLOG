@@ -53,7 +53,7 @@ mode :- write('Escrever o numero da escolha'), nl,
 
 menu_options(1) :- board(L1),jogar(L1).
 menu_options(2) :- menu_mode.
-menu_options(3) :- break,!.
+menu_options(3) :- break.
 menu_options(_) :- nl,
 	write('Introduza numero valido'),
 	nl,
@@ -75,19 +75,19 @@ finalgameArea(L1) :- nl,
 	display_primeira("A","J"), nl,
 	display_board(1,L1), nl.
 
-askPlay(TipoJogo, ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, X, L1) :-
+askPlay(ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, NrJogada, Board) :-
 	write('Digite a coluna (letra) da peca a mover'), nl,
 	getChar(ColunaToMove),
-	letra(TipoJogo, ColunaToMove, X, L1),
+	letra(ColunaToMove, NrJogada, Board),
 	write('Digite a linha (numero) da peca a mover'), nl,
 	getDigit(LinhaToMove),
-	numero(TipoJogo, LinhaToMove, X, L1),
+	numero(LinhaToMove, NrJogada, Board),
  	write('Digite a coluna (letra) do destino'), nl,
 	getChar(ColunaDestino),
-	letra(TipoJogo, ColunaDestino, X, L1),
+	letra(ColunaDestino, NrJogada, Board),
  	write('Digite a linha (numero) do destino'), nl,
 	getDigit(LinhaDestino),
-	numero(TipoJogo, LinhaDestino, X, L1).
+	numero(LinhaDestino, NrJogada, Board).
 
 jogar(L1) :- cls, nl,
 	write('Jogador vs Jogador'), nl,

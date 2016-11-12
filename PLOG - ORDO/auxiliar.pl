@@ -29,7 +29,7 @@ connected(1, Board, Backup, X, Y, Element, NrJogada):-
   ValueX is X+1, ValueY is Y+1,
   getElement(Board, ValueY, ValueX, Neighbor),
   Element == Neighbor -> write('Estas conectado'), nl, true;
-  nl, nl, write('AVISO!!!'), nl, write('Nao estas conectado, precisas de te conectar'), jogada(NrJogada,Backup), break.
+  nl, nl, write('AVISO!!!'), nl, write('Nao estas conectado, precisas de te conectar'), jogada(NrJogada,Backup).
 
  connected(2, Board, Backup, X, Y, Element, NrJogada):-
   Value is X+1,
@@ -94,6 +94,7 @@ board3([
 	[o, o, none, none, none, o, none, none, o, o],
 	[o, o, o, o, none, o, none, o, o, o],
 	[none, none, none, o, none, none, o, o, none, none]]).
+
 
 :-dynamic dyBoard/1.
 
@@ -195,15 +196,11 @@ display_primeira(_, _).
 
 
 % Verifica se Input esta entre A-J
-letra(_,X,_,_) :- X = 'a'; X = 'b'; X = 'c'; X = 'd'; X = 'e';
-X = 'f';  X = 'g';  X = 'h'; X = 'i';  X = 'j'.
-letra(1,_,X,L1) :- write('Letra invalida! Try Again'), nl, jogada(X,L1).
-letra(2,_,X,L1) :- write('Letra invalida! Try Again'), nl, jogadorvscomputador(X,L1).
+letra(X,NrJogada,Board) :- X == 'a'; X == 'b'; X == 'c'; X == 'd'; X == 'e';
+X == 'f';  X == 'g';  X == 'h'; X == 'i';  X == 'j'; write('Letra invalida! Try Again'), nl, jogada(NrJogada,Board).
 
 % Verifica se Input esta entre 1-8
-numero(_,X,_,_) :- integer(X), X >= 1,  X =< 8.
-numero(1,_,X,L1) :- write('Valor invalido! Try Again'), nl, jogada(X,L1).
-numero(2,_,X,L1) :- write('Valor invalido! Try Again'), nl, jogadorvscomputador(X,L1).
+numero(X,NrJogada,Board) :- (X > 0,  X < 9, true); (write(X), write('1 Valor invalido! Try Again'), nl, jogada(NrJogada,Board)).
 
 % Verifica se um numero é par ou impar
 par(N):- N mod 2 =:= 0.
