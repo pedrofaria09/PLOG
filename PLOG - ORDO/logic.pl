@@ -1,69 +1,67 @@
 :-consult(auxiliar).
 
-verifySimpleWhiteMove(TipoJogo, NewElement, OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY) :-
-	verifyWhiteNonBackMove(TipoJogo, NewY, OldY, NumeroJogada, AtualBoard),
+verifySimpleWhiteMove(TipoJogo, STATUS_CONECTION, NewElement, OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY) :-
+	(STATUS_CONECTION \= 0, verifyWhiteNonBackMove(TipoJogo, NewY, OldY, NumeroJogada, AtualBoard); true),
 	verifyElementNonNone(TipoJogo, OldElement, NumeroJogada, AtualBoard),
 	verifyElementNonBlack(TipoJogo, OldElement, NumeroJogada, AtualBoard),
 	verifyPieceX(TipoJogo, NewElement, NumeroJogada, AtualBoard, NewElement2).
 
-verifySimpleBlackMove(TipoJogo, NewElement, OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY) :-
-	verifyBlackNonBackMove(TipoJogo, NewY, OldY, NumeroJogada, AtualBoard),
+verifySimpleBlackMove(TipoJogo, STATUS_CONECTION, NewElement, OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY) :-
+	(STATUS_CONECTION \= 0, verifyBlackNonBackMove(TipoJogo, NewY, OldY, NumeroJogada, AtualBoard); true),
 	verifyElementNonNone(TipoJogo, OldElement, NumeroJogada, AtualBoard),
 	verifyElementNonWhite(TipoJogo, OldElement, NumeroJogada, AtualBoard),
 	verifyPieceO(TipoJogo, NewElement, NumeroJogada, AtualBoard, NewElement2).
 
-%  Jogador
-verifyElementNonBlack(1, Element,NumeroJogada,AtualBoard):- (Element == 'x' -> (nl, nl, write('AVISO!!!'), nl,
-	write('Nao podes escolher a peca de um oponente! Joga novamente'), nl, jogada(NumeroJogada,AtualBoard)); true).
-% Computador
-verifyElementNonBlack(2, Element,NumeroJogada,AtualBoard):- (Element == 'x' -> (jogadorvscomputador(NumeroJogada,AtualBoard)); true).
-verifyElementNonBlack(3, Element,NumeroJogada,AtualBoard):- (Element == 'x' -> (computadorvscomputador(NumeroJogada,AtualBoard)); true).
+% Verifica se a peca a escolher para mover é a do jogador adversário
+verifyElementNonBlack(TipoJogo, Element, NumeroJogada, AtualBoard):-
+	(Element == 'x' -> (nl, nl, write('AVISO!!!'), nl,
+	write('Nao podes escolher a peca de um oponente! Joga novamente'), nl, nl,
+	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
+	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
+	TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard))); true).
 
+%  Verifica se a peca a escolher para mover é a do jogador adversário
+verifyElementNonWhite(TipoJogo, Element, NumeroJogada, AtualBoard):-
+	(Element == 'o' -> (nl, nl, write('AVISO!!!'), nl,
+	write('Nao podes escolher a peca de um oponente! Joga novamente'), nl, nl,
+	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
+	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
+	TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard))); true).
 
-%  Jogador
-verifyElementNonWhite(1, Element,NumeroJogada,AtualBoard):- (Element == 'o' -> (nl, nl, write('AVISO!!!'), nl,
-	write('Nao podes escolher a peca de um oponente! Joga novamente'), nl, jogada(NumeroJogada,AtualBoard)); true).
-%  Computador
-verifyElementNonWhite(2, Element,NumeroJogada,AtualBoard):- (Element == 'o' -> (jogadorvscomputador(NumeroJogada,AtualBoard)); true).
-verifyElementNonWhite(3, Element,NumeroJogada,AtualBoard):- (Element == 'o' -> (computadorvscomputador(NumeroJogada,AtualBoard)); true).
+%  Verifica se a peca a escolher para mover é uma peca da board vazia
+verifyElementNonNone(TipoJogo, Element,NumeroJogada,AtualBoard):-
+	(Element == 'none' -> (nl, nl, write('AVISO!!!'), nl,
+	write('Nao podes escolher uma peca vazia! Joga novamente'),  nl, nl,
+	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
+	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
+	TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard))); true).
 
+%  Verifica se a peca a escolher como destino e uma das suas proprias pecas - Jogador X
+verifyPieceX(TipoJogo, NewElement, NumeroJogada, AtualBoard, NewElement2):-
+	((NewElement == 'x' -> NewElement2 = 'none');
+  (NewElement == 'o' -> nl, nl, write('AVISO!!!'), nl, write('Nao podes escolher a tua peca como destino! Joga novamente'), nl, nl,
+	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
+	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
+	TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard))); NewElement2 = 'none').
 
-%  Jogador
-verifyElementNonNone(1, Element,NumeroJogada,AtualBoard):- (Element == 'none' -> (nl, nl, write('AVISO!!!'), nl,
-	write('Nao podes escolher uma peca vazia! Joga novamente'), nl, jogada(NumeroJogada,AtualBoard)); true).
-%  Computador
-verifyElementNonNone(2, Element,NumeroJogada,AtualBoard):- (Element == 'none' -> (jogadorvscomputador(NumeroJogada,AtualBoard)); true).
-verifyElementNonNone(3, Element,NumeroJogada,AtualBoard):- (Element == 'none' -> (computadorvscomputador(NumeroJogada,AtualBoard)); true).
+%  Verifica se a peca a escolher como destino e uma das suas proprias pecas - Jogador O
+verifyPieceO(TipoJogo, NewElement, NumeroJogada, AtualBoard, NewElement2):-
+	((NewElement == 'o' -> NewElement2 = 'none');
+  (NewElement == 'x' -> nl, nl, write('AVISO!!!'), nl, write('Nao podes escolher a tua peca como destino! Joga novamente'), nl, nl,
+	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
+	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
+	TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard))); NewElement2 = 'none').
 
+%  Verifica se o jogador X pode andar para tras
+verifyBlackNonBackMove(TipoJogo, NewY,OldY , NumeroJogada, AtualBoard) :-
+	((NewY < OldY) -> nl, nl, write('AVISO!!!'), nl, write('Nao podes andar para tras! Joga novamente'), nl, nl,
+	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
+	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
+	TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard)); true).
 
-%  Jogador
-verifyPieceX(1, NewElement, NumeroJogada, AtualBoard, NewElement2):- ((NewElement == 'x' -> NewElement2 = 'none');
-  (NewElement == 'o' -> nl, nl, write('AVISO!!!'), nl, write('Nao podes escolher a tua peca como destino! Joga novamente'), jogada(NumeroJogada,AtualBoard)); NewElement2 = 'none').
-%  Computador
-verifyPieceX(2, NewElement, NumeroJogada, AtualBoard, NewElement2):- ((NewElement == 'x' -> NewElement2 = 'none');
-  (NewElement == 'o' -> jogadorvscomputador(NumeroJogada,AtualBoard)); NewElement2 = 'none').
-verifyPieceX(3, NewElement, NumeroJogada, AtualBoard, NewElement2):- ((NewElement == 'x' -> NewElement2 = 'none');
-  (NewElement == 'o' -> computadorvscomputador(NumeroJogada,AtualBoard)); NewElement2 = 'none').
-
-
-%  Jogador
-verifyPieceO(1, NewElement, NumeroJogada, AtualBoard, NewElement2):- ((NewElement == 'o' -> NewElement2 = 'none');
-  (NewElement == 'x' -> nl, nl, write('AVISO!!!'), nl, write('Nao podes escolher a tua peca como destino! Joga novamente'), jogada(NumeroJogada,AtualBoard)); NewElement2 = 'none').
-%  Computador
-verifyPieceO(2, NewElement, NumeroJogada, AtualBoard, NewElement2):- ((NewElement == 'o' -> NewElement2 = 'none');
-  (NewElement == 'x' -> jogadorvscomputador(NumeroJogada,AtualBoard)); NewElement2 = 'none').
-verifyPieceO(3, NewElement, NumeroJogada, AtualBoard, NewElement2):- ((NewElement == 'o' -> NewElement2 = 'none');
-  (NewElement == 'x' -> computadorvscomputador(NumeroJogada,AtualBoard)); NewElement2 = 'none').
-
-
-%  Jogador
-verifyBlackNonBackMove(1, NewY,OldY , NumeroJogada, AtualBoard) :- ((NewY < OldY) -> nl, nl, write('Nao podes andar para tras! '), jogada(NumeroJogada,AtualBoard); true).
-%  Computador
-verifyBlackNonBackMove(2, NewY,OldY , NumeroJogada, AtualBoard) :- ((NewY < OldY) -> jogadorvscomputador(NumeroJogada,AtualBoard); true).
-verifyBlackNonBackMove(3, NewY,OldY , NumeroJogada, AtualBoard) :- ((NewY < OldY) -> computadorvscomputador(NumeroJogada,AtualBoard); true).
-
-%  Jogador
-verifyWhiteNonBackMove(1, NewY,OldY , NumeroJogada, AtualBoard) :- ((NewY > OldY) -> nl, nl, write('Nao podes andar para tras! '), jogada(NumeroJogada,AtualBoard); true).
-%  Computador
-verifyWhiteNonBackMove(2, NewY,OldY , NumeroJogada, AtualBoard) :- ((NewY > OldY) -> jogadorvscomputador(NumeroJogada,AtualBoard); true).
-verifyWhiteNonBackMove(3, NewY,OldY , NumeroJogada, AtualBoard) :- ((NewY > OldY) -> computadorvscomputador(NumeroJogada,AtualBoard); true).
+%  Verifica se o jogador O pode andar para tras
+verifyWhiteNonBackMove(TipoJogo, NewY,OldY , NumeroJogada, AtualBoard) :-
+	((NewY > OldY) -> nl, nl, write('AVISO!!!'), nl, write('Nao podes andar para tras! Joga novamente'), nl, nl,
+	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
+	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
+	TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard)); true).

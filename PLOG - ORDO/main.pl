@@ -63,35 +63,35 @@ askPlay(TipoJogo, ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, NrJoga
 	numero(TipoJogo, LinhaDestino, NrJogada, Board).
 
 simpleWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
-	verifyElementConnection(AtualBoard, o, Return),
-	((Return == 0) ->  warningNotConnected(1); true),
+	verifyElementConnection(AtualBoard, o, STATUS_CONECTION),
+	((STATUS_CONECTION == 0) ->  warningNotConnected(1); true),
 	askPlay(TipoJogo, OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
 	getElement(AtualBoard, NewY, NewXNumber, NewElement),
-	verifySimpleWhiteMove(TipoJogo, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
+	verifySimpleWhiteMove(TipoJogo, STATUS_CONECTION, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
 	connected(TipoJogo,NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
-	verifyElementConnection(NewBoard, o, Return2),
-	((Return2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	verifyElementConnection(NewBoard, o, STATUS_CONECTION2),
+	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
 	(NewY == 1 -> cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada); true).
 
 simpleBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
-	verifyElementConnection(AtualBoard, x, Return),
-	((Return == 0) -> warningNotConnected(1); true),
+	verifyElementConnection(AtualBoard, x, STATUS_CONECTION),
+	((STATUS_CONECTION == 0) -> warningNotConnected(1); true),
 	askPlay(TipoJogo, OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
 	getElement(AtualBoard, NewY, NewXNumber, NewElement),
-	verifySimpleBlackMove(TipoJogo, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
+	verifySimpleBlackMove(TipoJogo, STATUS_CONECTION, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
 	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
-	verifyElementConnection(NewBoard, x, Return2),
-	((Return2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	verifyElementConnection(NewBoard, x, STATUS_CONECTION2),
+	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
 	(NewY == 8 -> (cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada)); true).
 
 ordoBlackMove(_,0,_,AtualBoard,NewBoard):- NewBoard = AtualBoard.
@@ -132,37 +132,37 @@ jogadorvscomputador(NumeroJogada,AtualBoard) :-
 	jogadorvscomputador(Y, NewBoard).
 
 simpleRandoomBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
-	verifyElementConnection(AtualBoard, x, Return),
-	((Return == 0) -> warningNotConnected(1); true),
+	verifyElementConnection(AtualBoard, x, STATUS_CONECTION),
+	((STATUS_CONECTION == 0) -> warningNotConnected(1); true),
 	random(1, 11, OldXNumber),
 	NewXNumber is OldXNumber,
 	random(1, 9, OldY),
 	NewY is OldY+1,
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
 	getElement(AtualBoard, NewY, NewXNumber, NewElement),
-	verifySimpleBlackMove(TipoJogo, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
+	verifySimpleBlackMove(TipoJogo, STATUS_CONECTION, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
 	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
-	verifyElementConnection(NewBoard, x, Return2),
-	((Return2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	verifyElementConnection(NewBoard, x, STATUS_CONECTION2),
+	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
 	(NewY == 8 -> (cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada)); true).
 
 simpleRandoomWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
-	verifyElementConnection(AtualBoard, o, Return),
-	((Return == 0) ->  warningNotConnected(1); true),
+	verifyElementConnection(AtualBoard, o, STATUS_CONECTION),
+	((STATUS_CONECTION == 0) ->  warningNotConnected(1); true),
 	random(1, 11, OldXNumber),
 	NewXNumber is OldXNumber,
 	random(1, 9, OldY),
 	NewY is OldY-1,
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
 	getElement(AtualBoard, NewY, NewXNumber, NewElement),
-	verifySimpleWhiteMove(TipoJogo, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
+	verifySimpleWhiteMove(TipoJogo, STATUS_CONECTION, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
 	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
-	verifyElementConnection(NewBoard, o, Return2),
-	((Return2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	verifyElementConnection(NewBoard, o, STATUS_CONECTION2),
+	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
 	(NewY == 1 -> cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada); true).
 
 

@@ -74,7 +74,7 @@ gameArea(X,L1) :- nl,
 finalgameArea(L1) :- nl,
 	display_primeira("A","J"), nl,
 	display_board(1,L1), nl.
-	
+
 
 jogar(L1) :- cls, nl,
 	write('Jogador vs Jogador'), nl,
