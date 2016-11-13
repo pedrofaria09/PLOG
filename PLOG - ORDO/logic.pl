@@ -1,11 +1,13 @@
 :-consult(auxiliar).
 
+% Conjunto de algumas regras do jogador das pecas brancas
 verifySimpleWhiteMove(TipoJogo, STATUS_CONECTION, NewElement, OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY) :-
 	(STATUS_CONECTION \= 0, verifyWhiteNonBackMove(TipoJogo, NewY, OldY, NumeroJogada, AtualBoard); true),
 	verifyElementNonNone(TipoJogo, OldElement, NumeroJogada, AtualBoard),
 	verifyElementNonBlack(TipoJogo, OldElement, NumeroJogada, AtualBoard),
 	verifyPieceX(TipoJogo, NewElement, NumeroJogada, AtualBoard, NewElement2).
 
+% Conjunto de algumas regras do jogador das pecas pretas
 verifySimpleBlackMove(TipoJogo, STATUS_CONECTION, NewElement, OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY) :-
 	(STATUS_CONECTION \= 0, verifyBlackNonBackMove(TipoJogo, NewY, OldY, NumeroJogada, AtualBoard); true),
 	verifyElementNonNone(TipoJogo, OldElement, NumeroJogada, AtualBoard),

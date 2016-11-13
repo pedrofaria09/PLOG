@@ -25,9 +25,11 @@ jogada(NumeroJogada,AtualBoard) :-
 	Y is NumeroJogada + 1,
 	jogada(Y, NewBoard).
 
+% Fim de jogo
 endOfGame(NumeroJogada):- impar(NumeroJogada), write('Jogador Branco ganha.'), nl, nl, nl, break.
 endOfGame(NumeroJogada):- par(NumeroJogada), write('Jogador Preto ganha.'), nl, nl, nl, break.
 
+% Pergunta ao utilizador se pretende usar a jogada simples ou ordo
 askTypeOfMove(TipoJogo, TypeOfMove, NumeroJogada, AtualBoard) :- write('Escolha tipo de jogada: '), nl,
 	write('1 - Simples'), nl,
 	write('2 - Ordo'), nl,
@@ -36,16 +38,19 @@ askTypeOfMove(TipoJogo, TypeOfMove, NumeroJogada, AtualBoard) :- write('Escolha 
 	write('Valor errado, escolha novamente'), nl,
 	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard); TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard))).
 
+% Informativo apenas, informa o jogador das pecas pretas que pode escolher duas peças para mover ao mesmo tempo no modo ordo
 askBlackOrdoNrMoves(TipoJogo, NumeroJogada, AtualBoard, NewBoard):-
 	write('Pode escolher duas pecas conjuntas para mover '), nl,
 	NrMoves is 2,
 	ordoBlackMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard).
 
+% Informativo apenas, informa o jogador das pecas brancas que pode escolher duas peças para mover ao mesmo tempo no modo ordo
 askWhiteOrdoNrMoves(TipoJogo, NumeroJogada, AtualBoard, NewBoard):-
 	write('Pode escolher duas pecas conjuntas para mover '), nl,
 	NrMoves is 2,
 	ordoWhiteMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard).
 
+% Pergunta ao jogador as posicoes das pecas a serem movidas
 askPlay(TipoJogo, ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, NrJogada, Board) :-
 	write('Digite a coluna (letra) da peca a mover'), nl,
 	getChar(ColunaToMove),
@@ -60,6 +65,7 @@ askPlay(TipoJogo, ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, NrJoga
 	getDigit(LinhaDestino),
 	numero(TipoJogo, LinhaDestino, NrJogada, Board).
 
+% Predicado principal do movimento simples das pecas brancas
 simpleWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, o, STATUS_CONECTION),
 	((STATUS_CONECTION == 0) ->  warningNotConnected(1); true),
@@ -76,6 +82,7 @@ simpleWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
 	(NewY == 1 -> cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada); true).
 
+% Predicado principal do movimento simples das pecas pretas
 simpleBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, x, STATUS_CONECTION),
 	((STATUS_CONECTION == 0) -> warningNotConnected(1); true),
@@ -92,6 +99,7 @@ simpleBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
 	(NewY == 8 -> (cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada)); true).
 
+% Predicado que chama o movimento ordo para o jogador das pecas pretas e mostra algumas informacoes do jogo
 ordoBlackMove(_,0,_,AtualBoard,NewBoard):- NewBoard = AtualBoard.
 ordoBlackMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 	(NrMoves > 0 ->
@@ -101,6 +109,7 @@ ordoBlackMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 	gameArea(NumeroJogada, BackBoard),
 	ordoBlackMove(TipoJogo, Y, NumeroJogada, BackBoard, NewBoard); true).
 
+% Predicado principal do movimento ordo do jogador das pecas pretas
 ordoBlackMovement(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, x, STATUS_CONECTION),
 	((STATUS_CONECTION == 0) -> warningNotConnected(1); true),
@@ -128,6 +137,7 @@ ordoBlackMovement(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
 	(NewY == 8 -> (cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada)); true).
 
+% Predicado que chama o movimento ordo para o jogador das pecas brancas e mostra algumas informacoes do jogo
 ordoWhiteMove(_, 0,_,AtualBoard,NewBoard):- NewBoard = AtualBoard.
 ordoWhiteMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 	(NrMoves > 0 ->
@@ -137,6 +147,7 @@ ordoWhiteMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 	gameArea(NumeroJogada, BackBoard),
 	ordoWhiteMove(TipoJogo, Y, NumeroJogada, BackBoard, NewBoard); true).
 
+% Predicado principal do movimento ordo do jogador das pecas brancas
 ordoWhiteMovement(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, o, STATUS_CONECTION),
 	((STATUS_CONECTION == 0) ->  warningNotConnected(1); true),
@@ -163,7 +174,7 @@ ordoWhiteMovement(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
 	(NewY == 1 -> cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada); true).
 
-
+% Predicado que pergunta a posicao inicial da segunda peca do movimento ordo
 askPlay2(TipoJogo, ColunaToMove, LinhaToMove, NrJogada, Board) :-
 	nl,nl,write('Posicao inicial da segunda peca!!!'), nl,
 	write('Digite a coluna (letra) da peca a mover'), nl,
@@ -172,8 +183,9 @@ askPlay2(TipoJogo, ColunaToMove, LinhaToMove, NrJogada, Board) :-
 	write('Digite a linha (numero) da peca a mover'), nl,
 	getDigit(LinhaToMove),
 	numero(TipoJogo, LinhaToMove, NrJogada, Board).
-%############################# JOGADOR vs COMPUTADOR ###############################
 
+
+%############################# JOGADOR vs COMPUTADOR ###############################
 %Jogada Par - Joga as Pretas - ' X ' - COMPUTADOR
 jogadorvscomputador(NumeroJogada,AtualBoard) :-
 	par(NumeroJogada),
@@ -192,6 +204,7 @@ jogadorvscomputador(NumeroJogada,AtualBoard) :-
 	Y is NumeroJogada + 1,
 	jogadorvscomputador(Y, NewBoard).
 
+% Predicado principal do movimento simples no modo Computador para as pecas pretas
 simpleRandoomBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, x, STATUS_CONECTION),
 	((STATUS_CONECTION == 0) -> warningNotConnected(1); true),
@@ -209,6 +222,7 @@ simpleRandoomBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
 	(NewY == 8 -> (cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada)); true).
 
+% Predicado principal do movimento simples no modo Computador para as pecas brancas
 simpleRandoomWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, o, STATUS_CONECTION),
 	((STATUS_CONECTION == 0) ->  warningNotConnected(1); true),
@@ -228,7 +242,6 @@ simpleRandoomWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 
 
 %############################# COMPUTADOR vs COMPUTADOR ###############################
-
 %Jogada Par - Joga as Pretas - ' X ' - COMPUTADOR
 computadorvscomputador(NumeroJogada,AtualBoard) :-
 	par(NumeroJogada),
@@ -237,7 +250,7 @@ computadorvscomputador(NumeroJogada,AtualBoard) :-
 	Y is NumeroJogada + 1,
 	computadorvscomputador(Y, NewBoard).
 
-%Jogada Impar - Joga as Brancas - ' O ' - JOGADOR
+%Jogada Impar - Joga as Brancas - ' O ' - COMPUTADOR
 computadorvscomputador(NumeroJogada,AtualBoard) :-
 	impar(NumeroJogada),
 	simpleRandoomWhiteMove(3, NumeroJogada, AtualBoard, NewBoard),

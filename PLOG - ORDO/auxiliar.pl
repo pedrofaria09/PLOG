@@ -1,9 +1,10 @@
 
-% Return element by index (Row,col)
+% Retorna elemento de uma posicao X,Y
 getElement(Matrix, Row, Col, Value):-
   nth1(Row, Matrix, MatrixRow),
   nth1(Col, MatrixRow, Value).
 
+% Verifica se esta conectado apos uma jogada
 connected(TipoJogo, Board, Backup, X, Y, Element, NrJogada):-
   Value is X+1,
   getElement(Board, Y, Value, Neighbor),
@@ -34,6 +35,7 @@ connected(TipoJogo, Board, Backup, X, Y, Element, NrJogada):-
 
 :-dynamic dyBoard/1.
 
+% Funcao auxiliar da verifyElementConnection() - limpa o elemento e verifica os seus vizinhos, limpando estes até não haver mais elementos vizinhos
 verifyConnection(X, Y, Element):- dyBoard(BackBoard),
   changeBoard(none,X,Y,BackBoard,NewBoard), retract(dyBoard(_)), asserta(dyBoard(NewBoard)),
   (dyBoard(List), ValueX is X + 1, ValueY is Y + 0, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
@@ -46,6 +48,7 @@ verifyConnection(X, Y, Element):- dyBoard(BackBoard),
   dyBoard(List), ValueX is X + 1, ValueY is Y - 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
   !).
 
+% Verifica a conectividade das pecas de um jogador, retorna 1 se conectado e 0 se caso contrario
 verifyElementConnection(BoardToTest, Element, Return):-
   asserta(dyBoard(BoardToTest)),
   getPositionElement(Element,BoardToTest,Xval,Yval),
@@ -55,6 +58,7 @@ verifyElementConnection(BoardToTest, Element, Return):-
   ((NrElements > 0, Return is 0);
   (NrElements == 0, Return is 1)).
 
+% Retorna a posicao de um elemento da board.
 getPositionElement(Element,Board,ValueX,ValueY):-
   random(1,11,X), random(1,9,Y), getElement(Board, Y, X, ElementToCheck),
   ((Element \= ElementToCheck), getPositionElement(Element,Board,ValueX,ValueY);
@@ -81,10 +85,6 @@ changeTo(ElemToChange,[Xs|Ys],[Xs|Ys1],N,M) :-
 
 changeBoard(ElemToChange,X,Y,Board,NewBoard) :-
                     changeTo(ElemToChange,Board,NewBoard,X,Y).
-
-
-
-board2([none, none, x, x, none, none, x, x, none, none]).
 
 % Count an element - ONLY LIST!!! NOT LIST OF LIST!!!
 conta1Lista(Valor, [H|T], NrVezes) :-
