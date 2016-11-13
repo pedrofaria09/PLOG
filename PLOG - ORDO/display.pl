@@ -104,6 +104,9 @@ gameData(Jogada, Numero_brancas, Numero_pretas) :-
 
 warningNotConnected(1) :- nl,nl,write('AVISO!!! - TENS DE CONECTAR-TE NESTA JOGADA!!!'), nl,nl,nl.
 
+writePositionInformation(OldXNumber, OldY, NewXNumber, NewY):-
+	format('Posicao anterior (X-Y): ~d-~d', [OldXNumber, OldY]), nl,
+	format('Nova Posicao (X-Y): ~d-~d', [NewXNumber, NewY]), nl,nl,nl.
 %=======================%
 % Board display
 %=======================%

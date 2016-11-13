@@ -92,15 +92,31 @@ getPositionOfOtherElementOrdo(TipoJogo, NumeroJogada, AtualBoard, OldX, OldY, Ne
 	AuxABSYY is abs(AuxABSY),
 	(AuxABSXX > 1, nl,nl,write('AVISO!!!'), nl, write('Tens de escolher um vizinho. Tenta novamente!!!'), nl,
 	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
-	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
-	TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard));true),
+	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard));true),
 	(AuxABSYY > 1, nl,nl,write('AVISO!!!'), nl, write('Tens de escolher um vizinho. Tenta novamente!!!'), nl,
 	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
-	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
-	TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard));true),
+	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard));true),
 	Aux1 is OldX - NewX,
 	Aux11 is abs(Aux1),
 	Aux2 is OldY - NewY,
 	Aux22 is abs(Aux2),
 	(NewX > OldX -> NewXNumber2 is OldX2 + Aux11; NewXNumber2 is OldX2 - Aux11),
 	(NewY > OldY -> NewYNumber2 is OldY2 + Aux22; NewYNumber2 is OldY2 - Aux22).
+
+% Escolhe uma peca branca random e lanca uma nova posicao nas suas 5 direcoes
+getRandomValuesWhite(Board, OldX, OldY, NewX, NewY):-
+	getPositionElement(o,Board,OldX,OldY),
+	random(0, 2, CanMoveY), % Se 0, nao move em Y, se 1, move em Y uma casa para cima
+	(CanMoveY == 0, NewY is OldY; NewY is OldY-1),
+	random(0, 3, XDirection), % Se 0, mantem a direcao em X, se 1: esquerda, se 2: direita
+	((XDirection == 0), NewX is OldX; (XDirection == 1), NewX is OldX -1; (XDirection == 2), NewX is OldX + 1),
+	((NewX == 11 ; NewX == 0) -> getRandomValuesWhite(Board, _, _, _, _); !,true).
+
+% Escolhe uma peca preta random e lanca uma nova posicao nas suas 5 direcoes
+getRandomValuesBlack(Board, OldX, OldY, NewX, NewY):-
+	getPositionElement(x,Board,OldX,OldY),
+	random(0, 2, CanMoveY), % Se 0, nao move em Y, se 1, move em Y uma casa para baixo
+	(CanMoveY == 0, NewY is OldY; NewY is OldY+1),
+	random(0, 3, XDirection), % Se 0, mantem a direcao em X, se 1: esquerda, se 2: direita
+	((XDirection == 0), NewX is OldX; (XDirection == 1), NewX is OldX -1; (XDirection == 2), NewX is OldX + 1),
+	((NewX == 11 ; NewX == 0) -> getRandomValuesBlack(Board, _, _, _, _); !,true).

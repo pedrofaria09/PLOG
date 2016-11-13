@@ -4,32 +4,32 @@ getElement(Matrix, Row, Col, Value):-
   nth1(Row, Matrix, MatrixRow),
   nth1(Col, MatrixRow, Value).
 
-% Verifica se esta conectado apos uma jogada
+% Verifica se esta conectado a uma outra peca apos uma jogada
 connected(TipoJogo, Board, Backup, X, Y, Element, NrJogada):-
   Value is X+1,
   getElement(Board, Y, Value, Neighbor),
-  Element == Neighbor -> write('Peca esta conectada'), nl, true;
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
   Value is X-1,
   getElement(Board, Y, Value, Neighbor),
-  Element == Neighbor -> write('Peca esta conectada'), nl, true;
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
   Value is Y-1,
   getElement(Board, Value, X, Neighbor),
-  Element == Neighbor -> write('Peca esta conectada'), nl, true;
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
   Value is Y+1,
   getElement(Board, Value, X, Neighbor),
-  Element == Neighbor -> write('Peca esta conectada'), nl, true;
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
   ValueX is X-1, ValueY is Y-1,
   getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Peca esta conectada'), nl, true;
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
   ValueX is X-1, ValueY is Y+1,
   getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Peca esta conectada'), nl, true;
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
   ValueX is X+1, ValueY is Y-1,
   getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Peca esta conectada'), nl, true;
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
   ValueX is X+1, ValueY is Y+1,
   getElement(Board, ValueY, ValueX, Neighbor),
-  Element == Neighbor -> write('Peca esta conectada'), nl, true;
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
   nl, nl, write('AVISO!!!'), nl, write('Jogada invalida, precisas de estar conectado!!!'), nl,nl,
   (TipoJogo == 1 -> jogada(NrJogada,Backup); TipoJogo == 2 -> jogadorvscomputador(NrJogada,Backup); TipoJogo == 3 -> computadorvscomputador(NrJogada,Backup)).
 
@@ -61,8 +61,8 @@ verifyElementConnection(BoardToTest, Element, Return):-
 % Retorna a posicao de um elemento da board.
 getPositionElement(Element,Board,ValueX,ValueY):-
   random(1,11,X), random(1,9,Y), getElement(Board, Y, X, ElementToCheck),
-  ((Element \= ElementToCheck), getPositionElement(Element,Board,ValueX,ValueY);
-  ValueX is X, ValueY is Y).
+  ((Element == ElementToCheck), (ValueX is X, ValueY is Y);
+  getPositionElement(Element,Board,ValueX,ValueY)).
 
 % Change content of the board
 changeTo(_,[],[],_,_).

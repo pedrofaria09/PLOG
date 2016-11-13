@@ -26,8 +26,7 @@ jogada(NumeroJogada,AtualBoard) :-
 	jogada(Y, NewBoard).
 
 % Fim de jogo
-endOfGame(NumeroJogada):- impar(NumeroJogada), write('Jogador Branco ganha.'), nl, nl, nl, break.
-endOfGame(NumeroJogada):- par(NumeroJogada), write('Jogador Preto ganha.'), nl, nl, nl, break.
+endOfGame(NumeroJogada):- ((impar(NumeroJogada), write('Jogador Branco ganha.'));(par(NumeroJogada), write('Jogador Preto ganha.'))), nl, nl, nl, break.
 
 % Pergunta ao utilizador se pretende usar a jogada simples ou ordo
 askTypeOfMove(TipoJogo, TypeOfMove, NumeroJogada, AtualBoard) :- write('Escolha tipo de jogada: '), nl,
@@ -208,13 +207,11 @@ jogadorvscomputador(NumeroJogada,AtualBoard) :-
 simpleRandoomBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, x, STATUS_CONECTION),
 	((STATUS_CONECTION == 0) -> warningNotConnected(1); true),
-	random(1, 11, OldXNumber),
-	NewXNumber is OldXNumber,
-	random(1, 9, OldY),
-	NewY is OldY+1,
+	getRandomValuesBlack(AtualBoard, OldXNumber, OldY, NewXNumber, NewY),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
 	getElement(AtualBoard, NewY, NewXNumber, NewElement),
 	verifySimpleBlackMove(TipoJogo, STATUS_CONECTION, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
+	writePositionInformation(OldXNumber, OldY, NewXNumber, NewY),
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
 	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
@@ -226,13 +223,11 @@ simpleRandoomBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 simpleRandoomWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	verifyElementConnection(AtualBoard, o, STATUS_CONECTION),
 	((STATUS_CONECTION == 0) ->  warningNotConnected(1); true),
-	random(1, 11, OldXNumber),
-	NewXNumber is OldXNumber,
-	random(1, 9, OldY),
-	NewY is OldY-1,
+	getRandomValuesWhite(AtualBoard, OldXNumber, OldY, NewXNumber, NewY),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
 	getElement(AtualBoard, NewY, NewXNumber, NewElement),
 	verifySimpleWhiteMove(TipoJogo, STATUS_CONECTION, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
+	writePositionInformation(OldXNumber, OldY, NewXNumber, NewY),
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
 	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
@@ -240,20 +235,19 @@ simpleRandoomWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
 	(NewY == 1 -> cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada); true).
 
-
 %############################# COMPUTADOR vs COMPUTADOR ###############################
 %Jogada Par - Joga as Pretas - ' X ' - COMPUTADOR
 computadorvscomputador(NumeroJogada,AtualBoard) :-
 	par(NumeroJogada),
-	simpleRandoomBlackMove(3, NumeroJogada, AtualBoard, NewBoard),
 	gameArea(NumeroJogada, AtualBoard),
+	simpleRandoomBlackMove(3, NumeroJogada, AtualBoard, NewBoard),
 	Y is NumeroJogada + 1,
 	computadorvscomputador(Y, NewBoard).
 
 %Jogada Impar - Joga as Brancas - ' O ' - COMPUTADOR
 computadorvscomputador(NumeroJogada,AtualBoard) :-
 	impar(NumeroJogada),
-	simpleRandoomWhiteMove(3, NumeroJogada, AtualBoard, NewBoard),
 	gameArea(NumeroJogada, AtualBoard),
+	simpleRandoomWhiteMove(3, NumeroJogada, AtualBoard, NewBoard),
 	Y is NumeroJogada + 1,
 	computadorvscomputador(Y, NewBoard).
