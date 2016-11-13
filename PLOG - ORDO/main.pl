@@ -66,36 +66,40 @@ askPlay(TipoJogo, ColunaToMove, LinhaToMove, ColunaDestino, LinhaDestino, NrJoga
 
 % Predicado principal do movimento simples das pecas brancas
 simpleWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
+	STATUS_PLAYER1 is 0,
 	verifyElementConnection(AtualBoard, o, STATUS_CONECTION),
-	((STATUS_CONECTION == 0) ->  warningNotConnected(1); true),
+	((STATUS_CONECTION == 0) -> STATUS_PLAYER2 is 1, warningNotConnected(1), true; true),
 	askPlay(TipoJogo, OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
 	getElement(AtualBoard, NewY, NewXNumber, NewElement),
 	verifySimpleWhiteMove(TipoJogo, STATUS_CONECTION, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
+	writePositionInformation(OldXNumber, OldY, NewXNumber, NewY),
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
-	connected(TipoJogo,NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
+%	connected(TipoJogo,NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
 	verifyElementConnection(NewBoard, o, STATUS_CONECTION2),
-	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	verifyConnectionByPlayerOrOther(TipoJogo, NumeroJogada, AtualBoard, NewBoard, STATUS_PLAYER1, STATUS_PLAYER2, STATUS_CONECTION2),
 	(NewY == 1 -> cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada); true).
 
 % Predicado principal do movimento simples das pecas pretas
 simpleBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
+	STATUS_PLAYER1 is 0,
 	verifyElementConnection(AtualBoard, x, STATUS_CONECTION),
-	((STATUS_CONECTION == 0) -> warningNotConnected(1); true),
+	((STATUS_CONECTION == 0) -> STATUS_PLAYER2 is 1, warningNotConnected(1); true),
 	askPlay(TipoJogo, OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
 	letterToNumber(NewX, NewXNumber),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
 	getElement(AtualBoard, NewY, NewXNumber, NewElement),
 	verifySimpleBlackMove(TipoJogo, STATUS_CONECTION, NewElement,OldElement, NumeroJogada, AtualBoard, NewElement2, OldY, NewY),
+	writePositionInformation(OldXNumber, OldY, NewXNumber, NewY),
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
-	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
+%	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
 	verifyElementConnection(NewBoard, x, STATUS_CONECTION2),
-	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	verifyConnectionByPlayerOrOther(TipoJogo, NumeroJogada, AtualBoard, NewBoard, STATUS_PLAYER1, STATUS_PLAYER2, STATUS_CONECTION2),
 	(NewY == 8 -> (cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada)); true).
 
 % Predicado que chama o movimento ordo para o jogador das pecas pretas e mostra algumas informacoes do jogo
@@ -110,8 +114,9 @@ ordoBlackMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 
 % Predicado principal do movimento ordo do jogador das pecas pretas
 ordoBlackMovement(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
+	STATUS_PLAYER1 is 0,
 	verifyElementConnection(AtualBoard, x, STATUS_CONECTION),
-	((STATUS_CONECTION == 0) -> warningNotConnected(1); true),
+	((STATUS_CONECTION == 0) -> STATUS_PLAYER2 is 1, warningNotConnected(1); true),
 	askPlay(TipoJogo, OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	askPlay2(TipoJogo, OldX2, OldY2, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
@@ -133,7 +138,7 @@ ordoBlackMovement(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	changeBoard(OldElement2, NewXNumber2, NewY2, NewBoard3, NewBoard),
 	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
 	verifyElementConnection(NewBoard, x, STATUS_CONECTION2),
-	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	verifyConnectionByPlayerOrOther(TipoJogo, NumeroJogada, AtualBoard, NewBoard, STATUS_PLAYER1, STATUS_PLAYER2, STATUS_CONECTION2),
 	(NewY == 8 -> (cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada)); true).
 
 % Predicado que chama o movimento ordo para o jogador das pecas brancas e mostra algumas informacoes do jogo
@@ -148,8 +153,9 @@ ordoWhiteMove(TipoJogo, NrMoves, NumeroJogada, AtualBoard, NewBoard) :-
 
 % Predicado principal do movimento ordo do jogador das pecas brancas
 ordoWhiteMovement(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
+	STATUS_PLAYER1 is 0,
 	verifyElementConnection(AtualBoard, o, STATUS_CONECTION),
-	((STATUS_CONECTION == 0) ->  warningNotConnected(1); true),
+	((STATUS_CONECTION == 0) -> STATUS_PLAYER2 is 1, warningNotConnected(1); true),
 	askPlay(TipoJogo, OldX, OldY, NewX, NewY, NumeroJogada, AtualBoard),
 	askPlay2(TipoJogo, OldX2, OldY2, NumeroJogada, AtualBoard),
 	letterToNumber(OldX, OldXNumber),
@@ -168,9 +174,9 @@ ordoWhiteMovement(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard2),
 	changeBoard(NewElement4, OldXNumber2, OldY2, NewBoard2, NewBoard3),
 	changeBoard(OldElement2, NewXNumber2, NewY2, NewBoard3, NewBoard),
-	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
+%	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
 	verifyElementConnection(NewBoard, o, STATUS_CONECTION2),
-	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	verifyConnectionByPlayerOrOther(TipoJogo, NumeroJogada, AtualBoard, NewBoard, STATUS_PLAYER1, STATUS_PLAYER2, STATUS_CONECTION2),
 	(NewY == 1 -> cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada); true).
 
 % Predicado que pergunta a posicao inicial da segunda peca do movimento ordo
@@ -205,8 +211,9 @@ jogadorvscomputador(NumeroJogada,AtualBoard) :-
 
 % Predicado principal do movimento simples no modo Computador para as pecas pretas
 simpleRandoomBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
+	STATUS_PLAYER1 is 0,
 	verifyElementConnection(AtualBoard, x, STATUS_CONECTION),
-	((STATUS_CONECTION == 0) -> warningNotConnected(1); true),
+	((STATUS_CONECTION == 0) -> STATUS_PLAYER2 is 1, warningNotConnected(1); true),
 	getRandomValuesBlack(AtualBoard, OldXNumber, OldY, NewXNumber, NewY),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
 	getElement(AtualBoard, NewY, NewXNumber, NewElement),
@@ -214,15 +221,16 @@ simpleRandoomBlackMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	writePositionInformation(OldXNumber, OldY, NewXNumber, NewY),
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
-	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
+%	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
 	verifyElementConnection(NewBoard, x, STATUS_CONECTION2),
-	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	verifyConnectionByPlayerOrOther(TipoJogo, NumeroJogada, AtualBoard, NewBoard, STATUS_PLAYER1, STATUS_PLAYER2, STATUS_CONECTION2),
 	(NewY == 8 -> (cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada)); true).
 
 % Predicado principal do movimento simples no modo Computador para as pecas brancas
 simpleRandoomWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
+	STATUS_PLAYER1 is 0,
 	verifyElementConnection(AtualBoard, o, STATUS_CONECTION),
-	((STATUS_CONECTION == 0) ->  warningNotConnected(1); true),
+	((STATUS_CONECTION == 0) -> STATUS_PLAYER2 is 1, warningNotConnected(1); true),
 	getRandomValuesWhite(AtualBoard, OldXNumber, OldY, NewXNumber, NewY),
 	getElement(AtualBoard, OldY, OldXNumber, OldElement),
 	getElement(AtualBoard, NewY, NewXNumber, NewElement),
@@ -230,10 +238,11 @@ simpleRandoomWhiteMove(TipoJogo, NumeroJogada, AtualBoard, NewBoard) :-
 	writePositionInformation(OldXNumber, OldY, NewXNumber, NewY),
 	changeBoard(NewElement2, OldXNumber, OldY, AtualBoard, NewBoard1),
 	changeBoard(OldElement, NewXNumber, NewY, NewBoard1, NewBoard),
-	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
+%	connected(TipoJogo, NewBoard, AtualBoard, NewXNumber, NewY, OldElement, NumeroJogada),
 	verifyElementConnection(NewBoard, o, STATUS_CONECTION2),
-	((STATUS_CONECTION2 == 0) -> (cls, finalgameArea(NewBoard), nl, write('Nao estas conenctado!!!'), nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	verifyConnectionByPlayerOrOther(TipoJogo, NumeroJogada, AtualBoard, NewBoard, STATUS_PLAYER1, STATUS_PLAYER2, STATUS_CONECTION2),
 	(NewY == 1 -> cls, finalgameArea(NewBoard), nl, endOfGame(NumeroJogada); true).
+
 
 %############################# COMPUTADOR vs COMPUTADOR ###############################
 %Jogada Par - Joga as Pretas - ' X ' - COMPUTADOR

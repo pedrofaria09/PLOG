@@ -107,6 +107,7 @@ warningNotConnected(1) :- nl,nl,write('AVISO!!! - TENS DE CONECTAR-TE NESTA JOGA
 writePositionInformation(OldXNumber, OldY, NewXNumber, NewY):-
 	format('Posicao anterior (X-Y): ~d-~d', [OldXNumber, OldY]), nl,
 	format('Nova Posicao (X-Y): ~d-~d', [NewXNumber, NewY]), nl,nl,nl.
+
 %=======================%
 % Board display
 %=======================%
@@ -120,6 +121,15 @@ board([[none, none, x, x, none, none, x, x, none, none],
 	[o, o, o, o, o, o, o, o, o, o],
 	[none, none, o, o, none, none, o, o, none, none]]).
 
+boardTest([[none, none, none, x, none, none, x, x, none, none],
+	[x, x, x, none, x, x, x, x, x, x],
+	[x, x, none, none, x, x, none, none, x, x],
+	[o, x, x, none, none, none, none, none, none, none],
+	[none, o, none, none, none, none, none, none, none, none],
+	[o, o, none, none, o, o, none, none, o, o],
+	[o, o, o, o, o, o, o, o, o, o],
+	[none, none, o, o, none, none, o, o, none, none]]).
+
 display_board(X,[L2|L2s]) :- write(X), Y is X+1, write('- '), display_line(L2), nl, display_line__(L2), nl, display_board(Y,L2s).
 display_board(_,[]) :- nl.
 
@@ -129,6 +139,10 @@ display_line([]):- !.
 display_line__([_|Es]) :- write(' - -'), display_line__(Es).
 display_line__([]):- !.
 
+% Display First Line in a 'dynamic' way
+display_primeira(Inicio, Fim):-
+	write('   '), Y is Inicio + 0, Inicio =< Fim, char_code(Imprime, Y), write(Imprime), X is Y +1, display_primeira(X, Fim).
+display_primeira(_, _).
 
 translate(none,' ').
 translate(x,'X').

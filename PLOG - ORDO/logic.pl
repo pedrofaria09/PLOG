@@ -84,39 +84,66 @@ verifyWhiteNonBackMove(TipoJogo, NewY,OldY , NumeroJogada, AtualBoard) :-
 	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
 	TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard)); true).
 
-% Devolve X e Y do vizinho escolhido no modo ordo, verifica se escolheu corretamente um vizinho
-getPositionOfOtherElementOrdo(TipoJogo, NumeroJogada, AtualBoard, OldX, OldY, NewX, NewY, OldX2, OldY2, NewXNumber2, NewYNumber2):-
-	AuxABSX is OldX - OldX2,
-	AuxABSXX is abs(AuxABSX),
-	AuxABSY is OldY - OldY2,
-	AuxABSYY is abs(AuxABSY),
-	(AuxABSXX > 1, nl,nl,write('AVISO!!!'), nl, write('Tens de escolher um vizinho. Tenta novamente!!!'), nl,
-	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
-	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard));true),
-	(AuxABSYY > 1, nl,nl,write('AVISO!!!'), nl, write('Tens de escolher um vizinho. Tenta novamente!!!'), nl,
-	(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
-	TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard));true),
-	Aux1 is OldX - NewX,
-	Aux11 is abs(Aux1),
-	Aux2 is OldY - NewY,
-	Aux22 is abs(Aux2),
-	(NewX > OldX -> NewXNumber2 is OldX2 + Aux11; NewXNumber2 is OldX2 - Aux11),
-	(NewY > OldY -> NewYNumber2 is OldY2 + Aux22; NewYNumber2 is OldY2 - Aux22).
+% Verifica a conecao do jogador no final da jogada dependendo se estava conectado ou nao ao inicio da jogada
+verifyConnectionByPlayerOrOther(TipoJogo, NumeroJogada, AtualBoard, NewBoard, STATUS_PLAYER1, STATUS_PLAYER2, STATUS_CONECTION2):-
+	((STATUS_CONECTION2 == 0, STATUS_PLAYER2 == 1) -> (cls, gameArea(NumeroJogada, NewBoard), nl, write('Nao estas conenctado!!!'), nl, nl, AUX is NumeroJogada + 1, endOfGame(AUX)); true),
+	((STATUS_CONECTION2 == 0, STATUS_PLAYER1 == 0) ->
+		(nl,nl, write('Aviso!!!'), nl, write('Tens de repetir a jogada!!! Nao estavas conectado!!!'), nl,
+		(TipoJogo == 1 -> jogada(NumeroJogada,AtualBoard);
+		TipoJogo == 2 -> jogadorvscomputador(NumeroJogada,AtualBoard);
+		TipoJogo == 3 -> computadorvscomputador(NumeroJogada,AtualBoard))); true).
 
-% Escolhe uma peca branca random e lanca uma nova posicao nas suas 5 direcoes
-getRandomValuesWhite(Board, OldX, OldY, NewX, NewY):-
-	getPositionElement(o,Board,OldX,OldY),
-	random(0, 2, CanMoveY), % Se 0, nao move em Y, se 1, move em Y uma casa para cima
-	(CanMoveY == 0, NewY is OldY; NewY is OldY-1),
-	random(0, 3, XDirection), % Se 0, mantem a direcao em X, se 1: esquerda, se 2: direita
-	((XDirection == 0), NewX is OldX; (XDirection == 1), NewX is OldX -1; (XDirection == 2), NewX is OldX + 1),
-	((NewX == 11 ; NewX == 0) -> getRandomValuesWhite(Board, _, _, _, _); !,true).
+:-dynamic dyBoard/1.
 
-% Escolhe uma peca preta random e lanca uma nova posicao nas suas 5 direcoes
-getRandomValuesBlack(Board, OldX, OldY, NewX, NewY):-
-	getPositionElement(x,Board,OldX,OldY),
-	random(0, 2, CanMoveY), % Se 0, nao move em Y, se 1, move em Y uma casa para baixo
-	(CanMoveY == 0, NewY is OldY; NewY is OldY+1),
-	random(0, 3, XDirection), % Se 0, mantem a direcao em X, se 1: esquerda, se 2: direita
-	((XDirection == 0), NewX is OldX; (XDirection == 1), NewX is OldX -1; (XDirection == 2), NewX is OldX + 1),
-	((NewX == 11 ; NewX == 0) -> getRandomValuesBlack(Board, _, _, _, _); !,true).
+% Funcao auxiliar da verifyElementConnection() - limpa o elemento e verifica os seus vizinhos, limpando estes até não haver mais elementos vizinhos
+verifyConnection(X, Y, Element):- dyBoard(BackBoard),
+  changeBoard(none,X,Y,BackBoard,NewBoard), retract(dyBoard(_)), asserta(dyBoard(NewBoard)),
+  (dyBoard(List), ValueX is X + 1, ValueY is Y + 0, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X + 1, ValueY is Y + 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X + 0, ValueY is Y + 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X - 1, ValueY is Y + 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X - 1, ValueY is Y - 0, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X - 1, ValueY is Y - 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X - 0, ValueY is Y - 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  dyBoard(List), ValueX is X + 1, ValueY is Y - 1, getElement(List, ValueY, ValueX, Neighbor), Neighbor == Element, verifyConnection(ValueX, ValueY, Element),fail;
+  !).
+
+% Verifica a conectividade das pecas de um jogador, retorna 1 se conectado e 0 se caso contrario
+verifyElementConnection(BoardToTest, Element, Return):-
+  asserta(dyBoard(BoardToTest)),
+  getPositionElement(Element,BoardToTest,Xval,Yval),
+  verifyConnection(Xval, Yval, Element),
+  dyBoard(List),retract(dyBoard(_)),
+  contaListaDeLista(Element, List, NrElements),
+  ((NrElements > 0, Return is 0);
+  (NrElements == 0, Return is 1)).
+
+
+% Verifica se esta conectado a uma outra peca apos uma jogada
+connected(TipoJogo, Board, Backup, X, Y, Element, NrJogada):-
+  Value is X+1,
+  getElement(Board, Y, Value, Neighbor),
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
+  Value is X-1,
+  getElement(Board, Y, Value, Neighbor),
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
+  Value is Y-1,
+  getElement(Board, Value, X, Neighbor),
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
+  Value is Y+1,
+  getElement(Board, Value, X, Neighbor),
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
+  ValueX is X-1, ValueY is Y-1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
+  ValueX is X-1, ValueY is Y+1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
+  ValueX is X+1, ValueY is Y-1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
+  ValueX is X+1, ValueY is Y+1,
+  getElement(Board, ValueY, ValueX, Neighbor),
+  Element == Neighbor -> write('Peca movida esta ligada a outra'), nl, true;
+  nl, nl, write('AVISO!!!'), nl, write('Jogada invalida, precisas de estar conectado!!!'), nl,nl,
+  (TipoJogo == 1 -> jogada(NrJogada,Backup); TipoJogo == 2 -> jogadorvscomputador(NrJogada,Backup); TipoJogo == 3 -> computadorvscomputador(NrJogada,Backup)).
