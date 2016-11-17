@@ -129,6 +129,15 @@ boardTest([[none, none, none, x, none, none, x, x, none, none],
 	[o, o, none, none, o, o, none, none, o, o],
 	[o, o, o, o, o, o, o, o, o, o],
 	[none, none, o, o, none, none, o, o, none, none]]).
+	
+boardTestFIM([[none, none, none, x, none, none, x, x, none, none],
+	[o, o, x, none, x, x, x, x, x, x],
+	[none, o, none, none, x, x, none, none, x, x],
+	[o, o, o, none, none, none, none, none, none, none],
+	[none, o, none, none, none, none, none, none, none, none],
+	[o, o, none, none, o, o, none, none, none, none],
+	[o, o, o, o, o, o, o, none, none, none],
+	[none, none, o, o, none, none, none, none, none, none]]).
 
 display_board(X,[L2|L2s]) :- write(X), Y is X+1, write('- '), display_line(L2), nl, display_line__(L2), nl, display_board(Y,L2s).
 display_board(_,[]) :- nl.
